@@ -29,7 +29,7 @@ const MapPage: NextPage = () => {
         <Layout>
           <Content
             style={{
-              padding: 24,
+              paddingLeft: 24,
               margin: 0,
               minHeight: 280,
               background: '#fff'
