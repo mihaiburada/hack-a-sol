@@ -3,6 +3,8 @@ import { Breadcrumb, Button, Layout, Menu } from "antd";
 import { Footer } from "antd/lib/layout/layout";
 import { useRouter } from 'next/router'
 
+import Map from '../../components/map'
+import Sidebar from '../../components/sidebar'
 
 const { Header, Content, Sider } = Layout;
 
@@ -17,23 +19,9 @@ const MapPage: NextPage = () => {
   return (
     <>
       <Layout style={{ minHeight: "100vh" }}>
-          <Sider width={200}>
-            <div
-              style={{
-                padding: "4em",
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Button type="primary" size="large" onClick={() => {}}>
-                {" "}
-                Draw{" "}
-              </Button>
-            </div>
-          </Sider>
+        <Sider width={200}>
+          <Sidebar />
+        </Sider>
         <Layout>
           <Content
             style={{
@@ -43,10 +31,10 @@ const MapPage: NextPage = () => {
               background: '#fff'
             }}
           >
-            Content
+            <Map />
           </Content>
           <Footer style={{ textAlign: 'right' }}>
-          <Button type="primary" size="large" onClick={handleClick}> Save </Button>
+            <Button type="primary" size="large" onClick={handleClick}> Save </Button>
           </Footer>
         </Layout>
       </Layout>
