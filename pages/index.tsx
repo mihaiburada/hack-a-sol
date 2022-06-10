@@ -1,14 +1,23 @@
+import { Button } from 'antd'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import { useRouter } from 'next/router'
 
 const Home: NextPage = () => {
+
+  const router = useRouter()
+
+  const handleClick = () => {
+    router.push("/content/map")
+  }
+
   return (
     <div className={styles.container}>
-
-      Dani a fost aici
-
+      <div className={styles.main}>
+      <Button type="primary" size="large" onClick={handleClick}> Go to map </Button>
+      </div>
     </div>
   )
 }
