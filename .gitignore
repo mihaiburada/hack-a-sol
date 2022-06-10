@@ -33,3 +33,8 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+/.idea/hack-a-sol.iml
+/.idea/modules.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/vcs.xml
+/.idea/.gitignore
