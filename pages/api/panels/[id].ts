@@ -1,8 +1,19 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-
+enum PanelType {
+    POLY = 'poly',
+    MONO = 'mono'
+}
 type Data = {
-    name: string
+    name: string,
+    producer:string,
+    pmax: number,
+    width:number,
+    height:number,
+    depth:number,
+    weight:number
+    type: PanelType
+    price: number
 }
 
 
