@@ -2,6 +2,7 @@ import { NextPage } from "next"
 import { Layout } from "antd"
 
 import Visualisation from '../../components/selectionVisualisation'
+import Statistics from "../../components/statistics"
 
 const { Sider } = Layout
 
@@ -9,7 +10,7 @@ const ResultsPage: NextPage = () => {
   return (
     <Layout style={{ minHeight: "100vh", padding: 24, backgroundColor: 'white', display: 'flex', flexDirection: 'row' }}>
       <div style={{ flex: 1 }}>
-        First Part
+        <Statistics />
       </div>
       <Sider width={600} style={{
         borderRadius: 12,

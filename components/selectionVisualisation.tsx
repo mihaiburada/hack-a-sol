@@ -1,11 +1,8 @@
-import { Input, Avatar, Radio, Button, Space, Upload, message } from "antd";
-import { useState, useMemo } from "react";
-import type { UploadProps } from 'antd';
-import { InboxOutlined } from '@ant-design/icons';
+import { SmileOutlined } from '@ant-design/icons';
+import { Button, Result } from 'antd';
 
 import { useRouter } from 'next/router'
 
-const { Dragger } = Upload;
 
 const SelectionVisualisation = () => {
 
@@ -23,8 +20,11 @@ const SelectionVisualisation = () => {
             }}
         >
             <div>
-                <p style={{ fontSize: 18, paddingBottom: 0, marginBottom: 0, fontWeight: 200 }}>Dear <span style={{ fontWeight: 400 }}>Silviu-Raul</span>,</p>
-                <p style={{ fontSize: 18, fontWeight: 200, paddingTop: 0 }}>This is the representation of your selection together with the solar panels.</p>
+                <Result
+                    icon={<SmileOutlined />}
+                    title="Great, we have done all the operations!"
+                    extra={<p style={{ margin: 0, padding: 0, position: 'relative', top: -20, fontSize: 18, fontWeight: 200 }}>The following image represents your selection together with panels.</p>}
+                />
             </div>
             <div style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <img src="/image_house.jpeg" style={{ objectFit: 'fill', width: '100%' }} />
