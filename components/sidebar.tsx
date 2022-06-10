@@ -86,7 +86,7 @@ const Sidebar = () => {
                 </div>}
             </div>
             <div style={{ width: '100%' }}>
-                <Button onClick={() => message.info('Congrats, we are doing stuff from here')} style={{ width: '100%' }} type="primary">NOW OR NEVER</Button>
+                <Button onClick={() => message.info('You are leaving, sorry dude!')} style={{ width: '100%' }} type="primary">Leave</Button>
             </div>
         </div>
     )
