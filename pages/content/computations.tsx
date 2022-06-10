@@ -18,8 +18,12 @@ const MapPage: NextPage = () => {
 
   return (
     <>
-      <Layout style={{ minHeight: "100vh" }}>
-        <Sider width={200}>
+      <Layout style={{ minHeight: "100vh", padding: 24, backgroundColor: 'white' }}>
+        <Sider width={400} style={{
+          borderRadius: 12,
+          backgroundColor: 'white',
+          boxShadow: '0px 3px 26px -7px rgba(0, 70, 143, 0.5)'
+        }}>
           <Sidebar />
         </Sider>
         <Layout>
@@ -33,7 +37,7 @@ const MapPage: NextPage = () => {
           >
             <Map />
           </Content>
-          <Footer style={{ textAlign: 'right' }}>
+          <Footer style={{ textAlign: 'right', backgroundColor: 'white' }}>
             <Button type="primary" size="large" onClick={handleClick}> Save </Button>
           </Footer>
         </Layout>
