@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { data } from "../../../data";
 enum PanelType {
     POLY = 'poly',
     MONO = 'mono'
@@ -22,7 +23,11 @@ export default (req:NextApiRequest, res:NextApiResponse) => {
     const { query: { id } } = req;
     switch (method) {
         case 'GET':
-            res.json({ method: 'GET', endpoint: 'panels' , id: id});
+            const record = data.find(el=>el.id===+id)
+            if (record == undefined) {
+                return res.status(404)
+            }
+            return res.status(200).json(record)
             break;
         case 'POST':
             res.json({ method: 'POST', endpoint: 'panels' , id:id});
