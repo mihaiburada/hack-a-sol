@@ -10,7 +10,7 @@ import {
   useSession,
 } from "next-auth/react";
 
-const ProvidersLoginForm = ({ providers }) => {
+const ProvidersLoginForm = ({ providers:  }) => {
   const router = useRouter();
   const onFinish = (values: any) => {
     router.push("/content/computations");
