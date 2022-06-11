@@ -79,43 +79,43 @@ const MapPage: NextPage = () => {
 		setDisableSave(true)
 	}, [reset])
 
-	return (
-		<>
-			<Layout style={{ minHeight: '100vh', padding: 24, backgroundColor: 'white' }}>
-				<Sider
-					width={400}
-					style={{
-						borderRadius: 12,
-						backgroundColor: 'white',
-						boxShadow: '0px 3px 26px -7px rgba(0, 70, 143, 0.5)'
-					}}
-				>
-					<Sidebar onLocationChange={(location: string) => setLocation(location)} />
-				</Sider>
-				<Layout>
-					<Content
-						style={{
-							paddingLeft: 24,
-							margin: 0,
-							minHeight: 280,
-							background: '#fff'
-						}}
-					>
-						<Map location={location} reset={reset} setDrawing={setDrawing} setDisableSave={setDisableSave} />
-					</Content>
-					<Footer style={{ textAlign: 'right', backgroundColor: 'white', display: 'flex' }}>
-						<Button type="primary" style={{ position: 'relative', left: -25 }} onClick={handleReset}>Reset drawing</Button>
-						{drawnMap ? <div id="map" ref={googlemap} /> : <div></div>}
-						<div style={{ flexGrow: 1 }}></div>
-						<Button style={{ position: 'relative', left: 50 }} type="primary" onClick={handleClick} disabled={disableSave}>
-							{' '}
-							Process{' '}
-						</Button>
-					</Footer>
-				</Layout>
-			</Layout>
-		</>
-	)
+  return (
+    <>
+      <Layout style={{ minHeight: '100vh', padding: 24, backgroundColor: 'white' }}>
+        <Sider
+          width={400}
+          style={{
+            borderRadius: 12,
+            backgroundColor: 'white',
+            boxShadow: '0px 3px 26px -7px rgba(0, 70, 143, 0.5)'
+          }}
+        >
+          <Sidebar onLocationChange={(location: string) => setLocation(location)} />
+        </Sider>
+        <Layout style={{backgroundColor: 'white'}}>
+          <Content
+            style={{
+              paddingLeft: 24,
+              margin: 0,
+              minHeight: 280,
+              background: '#fff'
+            }}
+          >
+            <Map location={location} reset={reset} setDrawing={setDrawing} setDisableSave={setDisableSave}/>
+          </Content>
+          <Footer style={{padding: 16, marginTop: 24, marginLeft: 24, textAlign: 'right', backgroundColor: 'white', display: 'flex',borderRadius: 12,boxShadow: '0px 3px 26px -7px rgba(0, 70, 143, 0.5)' }}>
+          <Button type="primary" size="large" onClick={handleReset}>Reset drawing</Button>
+          {drawnMap ?  <div id="map" ref={googlemap} /> : <div></div>}
+          <div style={{flexGrow: 1}}></div>
+            <Button type="primary" size="large" onClick={handleClick} disabled={disableSave}>
+              {' '}
+              Save{' '}
+            </Button>
+          </Footer>
+        </Layout>
+      </Layout>
+    </>
+  )
 }
 
 export default MapPage

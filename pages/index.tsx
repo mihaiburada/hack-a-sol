@@ -8,7 +8,7 @@ import { getProviders, signIn, signOut, useSession } from "next-auth/react";
 import { url } from "inspector";
 import { useEffect } from "react";
 
-export async function getServerSideProps(context:any) {
+export async function getServerSideProps(context: any) {
   const providers = await getProviders();
   return {
     props: { providers },
@@ -58,9 +58,10 @@ const Home = ({ providers }: { providers: any }) => {
             style={{
               display: "flex",
               justifyContent: "center",
+              marginBottom: 50
             }}
           >
-            <Image src="/logo.png" width="200px" height="200px" />
+            <Image src="/logo.png" width="200px" height="150px" />
           </div>
           {!session && (
             <>

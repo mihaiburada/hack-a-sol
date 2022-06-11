@@ -458,7 +458,7 @@ const Statistics = () => {
                             <Statistic title="Invertor" value={`€ ${invertor.toFixed(2)}`} />
                         </div>
                         <div style={{ flex: 1 }}>
-                            <Statistic title="Instalation" value={`€ ${instalation.toFixed(2)}`} />
+                            <Statistic title="Installation" value={`€ ${instalation.toFixed(2)}`} />
                         </div>
                     </div>
                 }
