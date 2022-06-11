@@ -3,7 +3,7 @@ import { useJsApiLoader } from '@react-google-maps/api'
 import { GOOGLE_MAPS_KEY } from '../utils/config'
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService'
 
-function Map({ location }: { location: string | undefined }) {
+function Map({ location, reset, setDrawing }: { location: string | undefined, reset: boolean, setDrawing: React.Dispatch<React.SetStateAction<any>> }) {
 	const googlemap = useRef(null)
 	const [userPosition, setUserPosition] = useState<{ lat: number; lng: number }>()
 
@@ -67,7 +67,10 @@ function Map({ location }: { location: string | undefined }) {
 
 				map = new google.maps.Map(googlemap.current as any, {
 					center: { ...result },
-					zoom: 20
+					zoom: 20,
+          fullscreenControl: false, // remove the top-right button
+          streetViewControl: false, // remove the pegman
+          zoomControl: false, // remove the bottom-right buttons
 				})
 
 				new google.maps.Marker({
@@ -87,30 +90,38 @@ function Map({ location }: { location: string | undefined }) {
 			}
 
 			const drawingManager = new google.maps.drawing.DrawingManager({
-				drawingMode: google.maps.drawing.OverlayType.MARKER,
+				drawingMode: google.maps.drawing.OverlayType.POLYGON,
 				drawingControl: true,
 				drawingControlOptions: {
 					position: google.maps.ControlPosition.TOP_CENTER,
-					drawingModes: [google.maps.drawing.OverlayType.MARKER, google.maps.drawing.OverlayType.CIRCLE, google.maps.drawing.OverlayType.POLYGON, google.maps.drawing.OverlayType.POLYLINE, google.maps.drawing.OverlayType.RECTANGLE]
+					drawingModes: [google.maps.drawing.OverlayType.POLYGON, google.maps.drawing.OverlayType.RECTANGLE]
 				},
-				markerOptions: {
-					icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'
-				},
-				circleOptions: {
-					fillColor: '#ffff00',
-					fillOpacity: 1,
-					strokeWeight: 5,
-					clickable: false,
-					editable: true,
-					zIndex: 1
-				}
+        polygonOptions:{
+          clickable: false,
+          editable: true,
+          zIndex: 1,
+        },
+        rectangleOptions:{
+          clickable: false,
+          editable: true,
+          zIndex: 1,
+        }
 			})
+
+      google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event: any) {
+        setDrawing(event)
+        drawingManager.setOptions({
+          drawingMode: null,
+          drawingControl: false
+        })
+
+      });
 
 			drawingManager.setMap(map)
 		}
 
 		compute()
-	}, [isLoaded, location, placesService, userPosition])
+	}, [isLoaded, location, placesService, userPosition, reset])
 	return <div id="map" ref={googlemap} />
 }
 export default Map
