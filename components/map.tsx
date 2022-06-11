@@ -1,10 +1,11 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useJsApiLoader } from '@react-google-maps/api'
 import { GOOGLE_MAPS_KEY } from '../utils/config'
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService'
 
 function Map({ location }: { location: string | undefined }) {
 	const googlemap = useRef(null)
+	const [userPosition, setUserPosition] = useState<{ lat: number; lng: number }>()
 
 	const { isLoaded } = useJsApiLoader({
 		googleMapsApiKey: GOOGLE_MAPS_KEY,
@@ -15,6 +16,26 @@ function Map({ location }: { location: string | undefined }) {
 	const { placesService, placePredictions, getPlacePredictions, isPlacePredictionsLoading } = usePlacesService({
 		apiKey: GOOGLE_MAPS_KEY
 	})
+
+  useEffect(() => {
+    if(!isLoaded) return
+    getCurrentPosition()
+      .then(res => setUserPosition(res))
+  },[isLoaded])
+
+	const getCurrentPosition = (): Promise<{ lat: number; lng: number }> =>
+		new Promise((resolve, reject) =>
+			navigator.geolocation.getCurrentPosition(
+				position =>
+					resolve({
+						lat: position.coords.latitude,
+						lng: position.coords.longitude
+					}),
+				error => {
+					if (error) return reject(error)
+				}
+			)
+		)
 
 	useEffect(() => {
 		if (!isLoaded) return
@@ -48,6 +69,21 @@ function Map({ location }: { location: string | undefined }) {
 					center: { ...result },
 					zoom: 20
 				})
+
+				new google.maps.Marker({
+					position: { ...result },
+					map
+				})
+			} else if(userPosition) {
+				map = new google.maps.Map(googlemap.current as any, {
+					center: { ...userPosition },
+					zoom: 20
+				})
+
+				new google.maps.Marker({
+					position: { ...userPosition },
+					map
+				})
 			}
 
 			const drawingManager = new google.maps.drawing.DrawingManager({
@@ -74,7 +110,7 @@ function Map({ location }: { location: string | undefined }) {
 		}
 
 		compute()
-	}, [isLoaded, location, placesService])
+	}, [isLoaded, location, placesService, userPosition])
 	return <div id="map" ref={googlemap} />
 }
 export default Map
