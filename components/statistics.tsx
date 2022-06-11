@@ -166,7 +166,7 @@ const Statistics = () => {
                     </div>
                     <div style={{ flex: 1 }}>
                         <Statistic title="Panel Cost" value={'$ 500'} />
-                         <Statistic title="Carbon footprint" value={computeKWh(energyTest)} />
+                         <Statistic title="Carbon footprint" value={computeCarbonFootprint(energyTest)} />
                          kg CO2
                     </div>
                     <div style={{ flex: 1 }}>
