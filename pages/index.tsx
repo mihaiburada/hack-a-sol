@@ -9,8 +9,10 @@ import {
   signIn,
   useSession,
 } from "next-auth/react";
+import {FC} from 'react'
+import {providers} from "next-auth/core/routes";
 
-const ProvidersLoginForm = ({ providers:  }) => {
+const ProvidersLoginForm:FC<any> = ({ providers: any }) => {
   const router = useRouter();
   const onFinish = (values: any) => {
     router.push("/content/computations");
@@ -82,7 +84,7 @@ const ProvidersLoginForm = ({ providers:  }) => {
   );
 };
 
-const Home: NextPage = ({ providers }) => {
+const Home: React.FC<any> = ({ providers: any }) => {
   const router = useRouter();
 
   const handleClick = () => {
@@ -94,7 +96,7 @@ const Home: NextPage = ({ providers }) => {
   return <>{!session && <ProvidersLoginForm providers={providers} />}</>;
 };
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: any) {
   const { req } = context;
   const session = await getSession({ req });
 

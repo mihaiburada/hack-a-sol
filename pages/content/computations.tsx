@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { NextPage } from 'next'
 import { Breadcrumb, Button, Layout, Menu } from 'antd'
 import { Footer } from 'antd/lib/layout/layout'
@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 
 import Map from '../../components/map'
 import Sidebar from '../../components/sidebar'
+import { calculateOptimumTilt } from '../../services/calculatePanelsInArea'
 
 const { Header, Content, Sider } = Layout
 
@@ -13,30 +14,33 @@ const MapPage: NextPage = () => {
   const [location, setLocation] = useState<string>()
   const [drawing, setDrawing] = useState<any>()
   const [reset, setReset] = useState<boolean>(false)
+  const [drawnMap, setDrawnMap] = useState<any>(undefined)
   const router = useRouter()
+
+  const googlemap = useRef(null)
 
   const computeRectangle = (overlay: any) => {
     console.log(overlay.getBounds().toJSON())
   }
 
-  const computePolygon = (overlay: any) => {
-    overlay.getPath().forEach((path: any) => {
-      console.log(path.toJSON())
-    })
-  }
+	const computePolygon = (overlay: any) => {
+		overlay.getPath().forEach((path: any) => {
+			console.log(path.toJSON())
+		})
+	}
 
-  const handleClick = () => {
-    if(drawing.type === "polygon"){
-      computePolygon(drawing.overlay)
-    }else if(drawing.type === "rectangle"){
-      computeRectangle(drawing.overlay)
-    }
-    router.push('/content/results')
-  }
+	const handleClick = () => {
+		if (drawing.type === 'polygon') {
+			computePolygon(drawing.overlay)
+		} else if (drawing.type === 'rectangle') {
+			computeRectangle(drawing.overlay)
+		}
+		router.push('/content/results')
+	}
 
-  const handleReset = () => {
-    setReset(!reset)
-  }
+	const handleReset = () => {
+		setReset(!reset)
+	}
 
   return (
     <>
@@ -64,6 +68,7 @@ const MapPage: NextPage = () => {
           </Content>
           <Footer style={{ textAlign: 'right', backgroundColor: 'white', display: 'flex' }}>
           <Button type="primary" size="large" onClick={handleReset}>Reset drawing</Button>
+          {drawnMap ?  <div id="map" ref={googlemap} /> : <div></div>}
           <div style={{flexGrow: 1}}></div>
             <Button type="primary" size="large" onClick={handleClick}>
               {' '}

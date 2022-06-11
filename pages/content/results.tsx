@@ -3,8 +3,8 @@ import { Layout } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-import Visualisation from "../../components/selectionVisualisation";
-import Statistics from "../../components/statistics";
+import Visualisation from '../../components/selectionVisualisation'
+import Statistics from "../../components/statistics"
 
 const { Sider } = Layout;
 
@@ -50,14 +50,11 @@ const ResultsPage: NextPage = () => {
       <div style={{ flex: 1 }}>
         <Statistics />
       </div>
-      <Sider
-        width={600}
-        style={{
-          borderRadius: 12,
-          backgroundColor: "white",
-          boxShadow: "0px 3px 26px -7px rgba(0, 70, 143, 0.5)",
-        }}
-      >
+      <Sider width={400} style={{
+        borderRadius: 12,
+        backgroundColor: 'white',
+        boxShadow: '0px 3px 26px -7px rgba(0, 70, 143, 0.5)'
+      }}>
         <Visualisation />
       </Sider>
     </Layout>
