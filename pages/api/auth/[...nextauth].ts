@@ -29,9 +29,7 @@ export default NextAuth({
       clientSecret: GITHUB_OAUTH_CLIENT_SECRET,
     }),
   ],
-  pages: {
-    signIn: "index",
-  },
+
 });
 
 //export default (req:NextApiRequest, res:NextApiResponse, options:any) => NextAuth(req, res, options)
