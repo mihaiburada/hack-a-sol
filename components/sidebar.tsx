@@ -5,6 +5,8 @@ import { InboxOutlined } from '@ant-design/icons'
 import { useJsApiLoader } from '@react-google-maps/api'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { GOOGLE_MAPS_KEY } from '../utils/config'
+import { useSession, signOut } from 'next-auth/react'
+import router from 'next/router'
 
 const { Dragger } = Upload
 
@@ -16,6 +18,14 @@ const Sidebar = ({ onLocationChange }: { onLocationChange: any }) => {
         version: 'weekly',
         libraries: ['drawing', 'places']
     })
+
+    const { data: session } = useSession();
+
+    useEffect(() => {
+        if (!session) {
+          router.push("/");
+        }
+      }, [session]);
 
     const props: UploadProps = {
         name: 'file',
@@ -73,7 +83,7 @@ const Sidebar = ({ onLocationChange }: { onLocationChange: any }) => {
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', width: '100%' }}>
                 <div style={{ paddingTop: 24 }}>
                     <p style={{ fontSize: 16, padding: 0, margin: 0, fontWeight: 200 }}>Welcome, </p>
-                    <p style={{ fontSize: 24, padding: '0px 0px 24px 0px', margin: 0, fontWeight: 500, color: '#1890ff', letterSpacing: 2 }}>Manzur Silviu-Raul </p>
+                    <p style={{ fontSize: 24, padding: '0px 0px 24px 0px', margin: 0, fontWeight: 500, color: '#1890ff', letterSpacing: 2 }}>{session?.user?.name} </p>
                 </div>
                 <div style={{ width: '100%' }}>
                     <div style={{ paddingBottom: 6, fontWeight: 200 }}>
@@ -102,7 +112,7 @@ const Sidebar = ({ onLocationChange }: { onLocationChange: any }) => {
                 {type === 'pdfs' && <div style={{ paddingTop: 24, width: '100%' }}>{renderUploadPDF}</div>}
             </div>
             <div style={{ width: '100%' }}>
-                <Button onClick={() => message.info('You are leaving, sorry dude!')} style={{ width: '100%' }} type="primary">
+                <Button onClick={() => signOut()} style={{ width: '100%' }} type="primary">
                     Leave
                 </Button>
             </div>

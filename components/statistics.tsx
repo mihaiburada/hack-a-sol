@@ -3,6 +3,10 @@ import { useEffect, useState } from 'react'
 import { SettingOutlined } from '@ant-design/icons'
 import { getPanels } from '../services/panels'
 import { useRouter } from 'next/router'
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const objectMap = (obj: any, fn: any) =>
     Object.fromEntries(
@@ -66,7 +70,7 @@ const Statistics = () => {
         'Wind Offshore': '0',
         'Solar': '2'
     })
-    const [text, setText] = useState("You can configure information about general stuff");
+    const [text, setText] = useState("You can configure general information");
     const [area, setArea] = useState(0)
     const [panelNumber, setPanelNumber] = useState(0)
     const [costs, setCosts] = useState(0)
@@ -77,6 +81,32 @@ const Statistics = () => {
     const [yearlyGen, setYearlyGen] = useState(0)
     const [deltaEuro, setDeltaEuro] = useState(0)
     const [deltaKW, setDeltaKW] = useState(0)
+    const data = {
+        labels: ['Coal', 'Oil', 'Cycle Gas Turbine', 'Nuclear', 'PS', 'NPS Hydro', 'Wind Onshore', 'Wind Offshore', 'Solar'],
+        datasets: [
+            {
+                label: '# of Votes',
+                data: [22, 1, 16, 21, 0, 26, 12, 0, 2],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                ],
+                borderWidth: 1,
+            },
+        ],
+    };
 
     useEffect(() => {
         handleGetPanels()
@@ -206,7 +236,7 @@ const Statistics = () => {
     const handleOnTabConfChange = (key: string) => {
         setActiveTabConf(key)
         if (key === 'general') {
-            setText("You can configure information about general stuff");
+            setText("You can configure general information");
         }
         else if (key === 'co2') {
             setText("You can configure information about CO2 emissions");
@@ -276,14 +306,23 @@ const Statistics = () => {
                 flexDirection: 'column'
             }}>
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <SettingOutlined style={{ paddingRight: 6, fontSize: 18 }} />
-                    <h3 style={{ marginBottom: 4, paddingBottom: 0 }}>Configuration</h3>
+                    <div>
+                        <SettingOutlined style={{ paddingRight: 6, fontSize: 18 }} />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'row', flex: 1 }}>
+                        <h3 style={{ marginBottom: 4, paddingBottom: 0 }}>Configuration</h3>
+                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', flex: 1 }}>
+                            <h3 style={{ marginBottom: 4, paddingBottom: 0, fontWeight: 200 }}>Surface: <strong>{area.toFixed(2)} m2</strong></h3>
+                        </div>
+                    </div>
                 </div>
                 <p style={{ padding: 0, margin: 0, fontWeight: 200 }}>{text}</p>
                 <Tabs defaultActiveKey={activeTab} onChange={handleOnTabConfChange}>
                     <TabPane tab="General" key="general">
                     </TabPane>
                     <TabPane tab="CO2" key="co2">
+                    </TabPane>
+                    <TabPane tab="Metrics" key="metrics">
                     </TabPane>
                 </Tabs>
                 {activeTabConf === 'general' ? <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', flex: 1 }}>
@@ -305,7 +344,7 @@ const Statistics = () => {
                         </div>
                         <Slider onChange={(value) => setAngle(value)} defaultValue={angle} />
                     </div>
-                </div> :
+                </div> : activeTabConf === 'co2' ?
                     <div style={{ display: 'flex', flexDirection: 'row', height: '100%', justifyContent: 'center' }}>
                         {Object.keys(co2Options).map((key: string) => {
                             return (
@@ -335,6 +374,12 @@ const Statistics = () => {
                             )
                         })}
 
+                    </div> :
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ maxHeight: 320, maxWidth: 320 }}>
+
+                            <Pie height={320} width={320} data={data} />
+                        </div>
                     </div>
                 }
             </div>
