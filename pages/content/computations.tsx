@@ -11,10 +11,31 @@ const { Header, Content, Sider } = Layout
 
 const MapPage: NextPage = () => {
   const [location, setLocation] = useState<string>()
+  const [drawing, setDrawing] = useState<any>()
+  const [reset, setReset] = useState<boolean>(false)
   const router = useRouter()
 
+  const computeRectangle = (overlay: any) => {
+    console.log(overlay.getBounds().toJSON())
+  }
+
+  const computePolygon = (overlay: any) => {
+    overlay.getPath().forEach((path: any) => {
+      console.log(path.toJSON())
+    })
+  }
+
   const handleClick = () => {
+    if(drawing.type === "polygon"){
+      computePolygon(drawing.overlay)
+    }else if(drawing.type === "rectangle"){
+      computeRectangle(drawing.overlay)
+    }
     router.push('/content/results')
+  }
+
+  const handleReset = () => {
+    setReset(!reset)
   }
 
   return (
@@ -39,9 +60,11 @@ const MapPage: NextPage = () => {
               background: '#fff'
             }}
           >
-            <Map location={location} />
+            <Map location={location} reset={reset} setDrawing={setDrawing}/>
           </Content>
-          <Footer style={{ textAlign: 'right', backgroundColor: 'white' }}>
+          <Footer style={{ textAlign: 'right', backgroundColor: 'white', display: 'flex' }}>
+          <Button type="primary" size="large" onClick={handleReset}>Reset drawing</Button>
+          <div style={{flexGrow: 1}}></div>
             <Button type="primary" size="large" onClick={handleClick}>
               {' '}
               Save{' '}
