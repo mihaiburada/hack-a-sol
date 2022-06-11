@@ -4,7 +4,7 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { useRouter } from "next/router";
-import { signIn, signOut, useSession } from 'next-auth/client'
+import { signIn, signOut, useSession } from 'next-auth/react'
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -14,15 +14,8 @@ const Home: NextPage = () => {
   };
 
 
-        const [session, loading] = useSession()
+        const {data:session} = useSession()
 
-        if (loading) {
-            return <div className={styles.container}>
-                <div className={styles.main}>
-                    <p>Loading...</p>
-                </div>
-            </div>
-        }
 
         return (
             <>
@@ -30,7 +23,7 @@ const Home: NextPage = () => {
                     <><div className={styles.container}>
                         <div className={styles.main}>
                         Not signed in <br />
-                        <button onClick={signIn}>Sign in</button>
+                        <Button onClick={()=>signIn()}>Sign in</Button>
                         </div>
                     </div>
                     </>
@@ -38,8 +31,8 @@ const Home: NextPage = () => {
                 {session && (
                     <><div className={styles.container}>
                         <div className={styles.main}>
-                        Signed in as {session.user.email} <br />
-                        <button onClick={signOut}>Sign out</button>
+                        Signed in as {session.user?.email} <br />
+                        <button onClick={()=>signOut()}>Sign out</button>
                         <Button type="primary" size="large" onClick={handleClick}>
                             {" "}
                             Go to map{" "}
