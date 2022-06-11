@@ -1,7 +1,7 @@
 import { SmileOutlined } from '@ant-design/icons';
 import { Result } from 'antd';
 
-
+import Area3D from './area3d'
 
 const SelectionVisualisation = () => {
 
@@ -24,8 +24,8 @@ const SelectionVisualisation = () => {
                     extra={<p style={{ margin: 0, padding: 0, position: 'relative', top: -20, fontSize: 18, fontWeight: 200 }}>The following image represents your selection together with panels.</p>}
                 />
             </div>
-            <div style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <img src="/image_house.jpeg" style={{ objectFit: 'fill', width: '100%' }} />
+            <div style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <Area3D />
             </div>
         </div>
     )
