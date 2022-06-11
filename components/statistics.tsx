@@ -1,8 +1,12 @@
-import { message, Statistic, Input, Slider } from 'antd'
+import { message, Statistic, Input, Slider, Button } from 'antd'
 import { useEffect, useState } from 'react'
+import { SettingOutlined } from '@ant-design/icons'
 import { getPanels } from '../services/panels'
+import { useRouter } from 'next/router'
 
 const Statistics = () => {
+
+    const router = useRouter()
 
     const [panels, setPanels] = useState()
 
@@ -34,12 +38,15 @@ const Statistics = () => {
                 borderRadius: 12,
                 backgroundColor: 'white',
                 boxShadow: '0px 3px 26px -7px rgba(0, 70, 143, 0.5)',
-                height: 200,
+                height: 250,
                 padding: '2rem',
                 display: 'flex',
                 flexDirection: 'column'
             }}>
-                <h3 style={{ marginBottom: 0, paddingBottom: 0 }}>Configuration</h3>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <SettingOutlined style={{ paddingRight: 6, fontSize: 18}} />
+                    <h3 style={{ marginBottom: 4, paddingBottom: 0 }}>Configuration</h3>
+                </div>
                 <p style={{ padding: 0, margin: 0, fontWeight: 200 }}>You can configure information about something, idk what.</p>
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', flex: 1 }}>
                     <div style={{ flex: 1, paddingRight: 24 }}>
@@ -66,7 +73,7 @@ const Statistics = () => {
                 borderRadius: 12,
                 backgroundColor: 'white',
                 boxShadow: '0px 3px 26px -7px rgba(0, 70, 143, 0.5)',
-                height: 'calc(100% - 200px)',
+                height: 'calc(100% - 250px)',
                 padding: '2rem',
                 display: 'flex',
                 flexDirection: 'column',
@@ -139,6 +146,9 @@ const Statistics = () => {
 
                         </div>
                     </div>
+                </div>
+                <div style={{ flex: 1, alignItems: 'center', display: 'flex', marginTop: 12 }}>
+                    <Button onClick={() => router.push("/content/computations")} type="primary">BACK</Button>
                 </div>
             </div>
         </div>
