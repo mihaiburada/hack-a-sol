@@ -33,7 +33,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 const Area = () => {
     return (
-        <div style={{ width: 500, height: 500, backgroundColor: '#f0f0f0', boxShadow: '1px 4px 11px -1px #3A3A3A' }}>
+        <div style={{ width: 300, height: 500, backgroundColor: '#f0f0f0', boxShadow: '1px 4px 11px -1px #3A3A3A' }}>
             <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <div style={{ backgroundColor: '#d4b106', width: 80, height: 140, margin: 12, boxShadow: '1px 4px 11px -1px #876800' }}><div style={{ transform: "rotate(-90deg)", display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', position: 'relative', top: 52 }}>Solar Panel</div></div>
                 <div style={{ backgroundColor: '#d4b106', width: 80, height: 140, margin: 12, boxShadow: '1px 4px 11px -1px #876800' }} />
