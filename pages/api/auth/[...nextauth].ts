@@ -20,9 +20,9 @@ const options = {
 export default NextAuth({
   providers: [
     // OAuth authentication providers..
-    GoogleProvider({
-      clientId: process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENTID,//GOOGLE_OAUTH_CLIENTID || 'invalidclientid',
-      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_SECRET//GOOGLE_OAUTH_CLIENT_SECRET || 'invalidsecret',
+      GoogleProvider({
+      clientId: String(process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENTID),//GOOGLE_OAUTH_CLIENTID || 'invalidclientid',
+      clientSecret: String(process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_SECRET)//GOOGLE_OAUTH_CLIENT_SECRET || 'invalidsecret',
     }),
     GithubProvider({
       clientId: GITHUB_OAUTH_CLIENTID,
