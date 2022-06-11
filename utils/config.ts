@@ -1,3 +1,9 @@
 export const BASE_URL = 'http://localhost:3000/api'
+export const NEXTAUTH_URL='http://localhost:3000'
+export const MAIL_FROM='Hack-a-sol Admin <admin@hack-as-sol.temp>'
+export const EMAIL_USERNAME='youremail@example.com'
+export const EMAIL_PASSWORD='your_app_password'
+export const GOOGLE_OAUTH_CLIENTID= process.env.GOOGLE_OAUTH_CLIENTID || "noclientid"
+export const GOOGLE_OAUTH_CLIENT_SECRET= process.env.GOOGLE_OAUTH_CLIENT_SECRET || "noclientsecret"
 export const GOOGLE_MAPS_KEY = 'AIzaSyAAL70plNUSm188wakHJCRU-FWm_mnTpV4'
 export const GOOGLE_LIBRARIES = ['drawing', 'places']
