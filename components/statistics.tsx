@@ -223,6 +223,7 @@ const Statistics = () => {
                         <div style={{ paddingBottom: 6, fontWeight: 200 }}>
                             <span>Panel Angle</span>
                         </div>
+                        <div>{angle}°</div>
                         <Slider onChange={(value) => setAngle(value)} defaultValue={angle} />
                     </div>
                 </div> :
