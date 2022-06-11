@@ -3,7 +3,7 @@ import { useJsApiLoader } from '@react-google-maps/api'
 import { GOOGLE_MAPS_KEY } from '../utils/config'
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService'
 
-function Map({ location }: { location: string }) {
+function Map({ location }: { location: string | undefined }) {
 	const googlemap = useRef(null)
 
 	const { isLoaded } = useJsApiLoader({
@@ -35,7 +35,7 @@ function Map({ location }: { location: string }) {
 								return reject('Eroare la google maps place details')
 							}
 
-              resolve({
+							resolve({
 								lat: Number(result.geometry?.location?.lat()),
 								lng: Number(result.geometry?.location?.lng())
 							})
@@ -44,7 +44,7 @@ function Map({ location }: { location: string }) {
 				}
 				const result = await getPlacesDetails(location)
 
-        map = new google.maps.Map(googlemap.current as any, {
+				map = new google.maps.Map(googlemap.current as any, {
 					center: { ...result },
 					zoom: 20
 				})
