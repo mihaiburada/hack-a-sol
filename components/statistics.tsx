@@ -53,7 +53,7 @@ const Statistics = () => {
     const [anualCons, setAnualCons] = useState('2400')
     const [reserverdSpace, setReservedSpace] = useState('60')
     const [angle, setAngle] = useState(0)
-    const [activeTab, setActiveTab] = useState('now')
+    const [activeTab, setActiveTab] = useState('max')
     const [activeTabConf, setActiveTabConf] = useState('general')
     const [co2Options, setCo2Options] = useState({
         'Coal': '22',
@@ -66,9 +66,7 @@ const Statistics = () => {
         'Wind Offshore': '0',
         'Solar': '2'
     })
-<<<<<<< HEAD
     const [text, setText] = useState("You can configure information about general stuff");
-=======
     const [area, setArea] = useState(0)
     const [panelNumber, setPanelNumber] = useState(0)
     const [costs, setCosts] = useState(0)
@@ -79,7 +77,6 @@ const Statistics = () => {
     const [yearlyGen, setYearlyGen] = useState(0)
     const [deltaEuro, setDeltaEuro] = useState(0)
     const [deltaKW, setDeltaKW] = useState(0)
->>>>>>> 24cbec8 (formulas)
 
     useEffect(() => {
         handleGetPanels()
@@ -91,16 +88,23 @@ const Statistics = () => {
         if (area > 0) {
             computePanelsData()
         }
-    }, [area, anualCons, reserverdSpace])
+    }, [area, anualCons, reserverdSpace, activeTab])
 
     const computePanelsData = () => {
         const panelWidth = 1650 / 1000
         const panelHeight = 992 / 1000
         const averageSunDay = 3
         const kwhPriceEur = 157 / 1000
+        const panelProduce = 280
 
         const panelMSquares = (panelWidth * panelHeight)
-        const neededPanelsNumber = Math.floor((area - (area * (Number(reserverdSpace) / 100))) / panelMSquares)
+        let neededPanelsNumber = 1
+        if (activeTab === 'max') {
+            neededPanelsNumber = Math.floor((area - (area * (Number(reserverdSpace) / 100))) / panelMSquares)
+        }
+        else {
+            neededPanelsNumber = Math.ceil((Number(anualCons) / panelProduce / 1000) * averageSunDay * 365)
+        }
 
         setPanelNumber(neededPanelsNumber)
 
@@ -109,8 +113,8 @@ const Statistics = () => {
         setCosts(costs)
 
         // replace 365 with number of days from current year
-        const panelProduced = neededPanelsNumber * (280 / 1000) * 365 * averageSunDay
-        const installedPower = (280 / 1000) * neededPanelsNumber // kw
+        const panelProduced = neededPanelsNumber * (panelProduce / 1000) * 365 * averageSunDay
+        const installedPower = (panelProduce / 1000) * neededPanelsNumber // kw
         setInstalledPower(installedPower)
 
         setProduced(panelProduced)
@@ -120,7 +124,7 @@ const Statistics = () => {
 
         setGenerated(generatedAmount)
 
-        const recoverMoney = (costs / (generatedAmount || 1)).toFixed(2)
+        const recoverMoney = Number((costs / (generatedAmount || 1)).toFixed(2))
 
         setRecover(recoverMoney)
 
@@ -197,14 +201,14 @@ const Statistics = () => {
         }
     }
 
-    // const handleOnTabChange = (key: string) => setActiveTab(key)
+    const handleOnTabChange = (key: string) => setActiveTab(key)
 
     const handleOnTabConfChange = (key: string) => {
         setActiveTabConf(key)
-        if(key === 'general'){
+        if (key === 'general') {
             setText("You can configure information about general stuff");
         }
-        else if (key === 'co2'){
+        else if (key === 'co2') {
             setText("You can configure information about CO2 emissions");
         }
     }
@@ -256,7 +260,7 @@ const Statistics = () => {
             style={{
                 width: '100%',
                 height: '100%',
-                paddingRight: '2rem',
+                paddingRight: '1.5rem',
                 flex: 1,
                 display: "flex",
                 flexDirection: "column",
@@ -267,7 +271,7 @@ const Statistics = () => {
                 backgroundColor: 'white',
                 boxShadow: '0px 3px 26px -7px rgba(0, 70, 143, 0.5)',
                 height: activeTabConf === 'general' ? 300 : 500,
-                padding: '2rem',
+                padding: '1.5rem',
                 display: 'flex',
                 flexDirection: 'column'
             }}>
@@ -344,14 +348,12 @@ const Statistics = () => {
                 flexDirection: 'column',
                 marginTop: 24
             }}>
-                {/* <Tabs defaultActiveKey={activeTab} onChange={handleOnTabChange}>
-                    <TabPane tab="Right Now" key="now">
+                <Tabs defaultActiveKey={activeTab} onChange={handleOnTabChange}>
+                    <TabPane tab="Maximum Panels" key="max">
                     </TabPane>
-                    <TabPane tab="Current Year" key="current">
+                    <TabPane tab="Cover Anual Amount" key="cover">
                     </TabPane>
-                    <TabPane tab="Last year" key="last">
-                    </TabPane>
-                </Tabs> */}
+                </Tabs>
                 <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 6 }}>
                     <div style={{ flex: 1 }}>
                         <Statistic title="Panels Number" value={panelNumber} />
@@ -360,7 +362,7 @@ const Statistics = () => {
                         <Statistic title="Installed Power" value={`${Math.floor(installedPower).toFixed(2)} kW`} />
                     </div>
                     <div style={{ flex: 1 }}>
-                        <Statistic title="Panels Cost" value={`$ ${costs.toFixed(2)}`} />
+                        <Statistic title="Panels Cost" value={`€ ${costs.toFixed(2)}`} />
                     </div>
                     <div style={{ flex: 1 }}>
                         <Statistic title="Recover Money In" value={`${recover} Years`} />
@@ -368,13 +370,13 @@ const Statistics = () => {
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 6 }}>
                     <div style={{ flex: 1 }}>
-                        <Statistic title="Generated Amount / Year" value={`$ ${generated.toFixed(2)}`} />
+                        <Statistic title="Generated Amount / Year" value={`€ ${generated.toFixed(2)}`} />
                     </div>
                     <div style={{ flex: 1 }}>
                         <Statistic title="Generated / Year" value={`${yearlyGen.toFixed(2)} kWh`} />
                     </div>
                     <div style={{ flex: 1 }}>
-                        <Statistic title="Produced - Consumed" value={`$ ${deltaEuro.toFixed(2)}`} />
+                        <Statistic title="Produced - Consumed" value={`€ ${deltaEuro.toFixed(2)}`} />
                     </div>
                     <div style={{ flex: 1 }}>
                         <Statistic title="Produced - Consumed" value={`${deltaKW.toFixed(2)} kWh`} />
@@ -422,23 +424,20 @@ const Statistics = () => {
                     <p style={{ padding: 0, margin: 0, fontWeight: 200 }}>If you consider that our results will help you and also the entire world you can ask for an offer.</p>
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
                         <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 6, alignItems: 'center', flex: 1 }}>
-                            <img id="img-transform" src="/company1.png" style={{ objectFit: 'fill', cursor: 'pointer' }} height={150} />
+                            <img id="img-transform" src="/company1.png" style={{ objectFit: 'fill', cursor: 'pointer' }} height={120} />
 
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 24, alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-                            <img id="img-transform" src="/company2.jpeg" style={{ objectFit: 'fill', cursor: 'pointer' }} height={150} />
+                            <img id="img-transform" src="/company2.jpeg" style={{ objectFit: 'fill', cursor: 'pointer' }} height={120} />
 
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 24, alignItems: 'center', justifyContent: 'flex-end', flex: 1 }}>
-                            <img id="img-transform" src="/company3.jpeg" style={{ objectFit: 'fill', cursor: 'pointer' }} height={150} />
+                            <img id="img-transform" src="/company3.jpeg" style={{ objectFit: 'fill', cursor: 'pointer' }} height={120} />
 
                         </div>
                     </div>
-                </div>
-                <div style={{ flex: 1, alignItems: 'center', display: 'flex' }}>
-                    <Button onClick={() => router.push("/content/computations")} type="primary">BACK</Button>
                 </div>
             </div>
         </div>
