@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useJsApiLoader } from '@react-google-maps/api'
 import { GOOGLE_MAPS_KEY } from '../utils/config'
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService'
+import { message } from 'antd'
 
 function Map({ location, reset, setDrawing }: { location: string | undefined, reset: boolean, setDrawing: React.Dispatch<React.SetStateAction<any>> }) {
 	const googlemap = useRef(null)
@@ -20,7 +21,9 @@ function Map({ location, reset, setDrawing }: { location: string | undefined, re
   useEffect(() => {
     if(!isLoaded) return
     getCurrentPosition()
-      .then(res => setUserPosition(res))
+      .then(res => setUserPosition(res)).catch((error) => {
+        message.error("Please allow access to location from your browser")
+      })
   },[isLoaded])
 
 	const getCurrentPosition = (): Promise<{ lat: number; lng: number }> =>
