@@ -4,6 +4,45 @@ import { SettingOutlined } from '@ant-design/icons'
 import { getPanels } from '../services/panels'
 import { useRouter } from 'next/router'
 
+const objectMap = (obj: any, fn: any) =>
+  Object.fromEntries(
+    Object.entries(obj).map(
+      ([k, v], i) => [k, fn(v, k, i)]
+    )
+  )
+
+const energyTest: EnergyGeneration = {
+    kwh: 1000,
+    percentages: {
+        cycleGasTurbine: 0,
+        oil: 0,
+        coal: 0,
+        nuclear: 0,
+        pumpedStorage: 0,
+        nonPumpedStorageHydro: 0,
+        windOnShore: 50,
+        windOfShore: 40,
+        solar: 10
+    }
+}
+
+export interface EnergySourcesPercentage {
+    cycleGasTurbine: number,
+    oil: number,
+    coal: number,
+    nuclear: number,
+    pumpedStorage: number,
+    nonPumpedStorageHydro: number,
+    windOnShore: number,
+    windOfShore: number,
+    solar: number
+}
+
+export interface EnergyGeneration {
+    kwh: number,
+    percentages: EnergySourcesPercentage
+}
+
 const Statistics = () => {
 
     const router = useRouter()
@@ -21,6 +60,48 @@ const Statistics = () => {
         }
 
         setPanels(panels)
+    }
+
+    const computeCarbonFootprint = ( energyGeneration: EnergyGeneration ) => {
+        let sum = 0;
+        let carbonFootprint = 0;
+        objectMap(energyGeneration.percentages, (percent: any) => sum += percent)
+        if(sum !== 100){
+            message.error("Percentage doesn't match 100% value")
+            return "Error"
+        }else{
+            Object.keys(energyGeneration.percentages).map(function(key, index) {
+                if(key === "cycleGasTurbine"){
+                    carbonFootprint += 0.5 * ( (energyGeneration.percentages[key] * energyGeneration.kwh) / 100 )
+                }
+                if(key === "oil"){
+                    carbonFootprint += 0.65  * ( (energyGeneration.percentages[key] * energyGeneration.kwh) /100 )
+                }
+                if(key === "coal"){
+                    carbonFootprint += 0.9  * ( (energyGeneration.percentages[key] * energyGeneration.kwh) / 100 )
+                }
+                if(key === "nuclear"){
+                    carbonFootprint += 0.005  * ( (energyGeneration.percentages[key] * energyGeneration.kwh) / 100 )
+                }
+                if(key === "pumpedStorage"){
+                    carbonFootprint += 0.02  * ( (energyGeneration.percentages[key] * energyGeneration.kwh) / 100 )
+                }
+                if(key === "nonPumpedStorageHydro"){
+                    carbonFootprint +=  0.005 * ( (energyGeneration.percentages[key] * energyGeneration.kwh) / 100 )
+                }
+                if(key === "windOnShore"){
+                    carbonFootprint +=  0.004 * ( (energyGeneration.percentages[key] * energyGeneration.kwh) / 100 )
+                }
+                if(key === "windOfShore"){
+                    carbonFootprint += 0.005  * ( (energyGeneration.percentages[key] * energyGeneration.kwh) / 100 )
+                }
+                if(key === "solar"){
+                    carbonFootprint += 0.058  * ( (energyGeneration.percentages[key] * energyGeneration.kwh) / 100 )
+                }
+          });
+          return carbonFootprint
+        }
+
     }
 
     return (
@@ -85,6 +166,8 @@ const Statistics = () => {
                     </div>
                     <div style={{ flex: 1 }}>
                         <Statistic title="Panel Cost" value={'$ 500'} />
+                         <Statistic title="Carbon footprint" value={computeCarbonFootprint(energyTest)} />
+                         kg CO2
                     </div>
                     <div style={{ flex: 1 }}>
                         <Statistic title="Recover Money In" value={'2 Years'} />

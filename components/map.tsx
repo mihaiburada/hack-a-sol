@@ -113,6 +113,7 @@ function Map({ location, reset, setDrawing }: { location: string | undefined, re
 
       google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event: any) {
         setDrawing(event)
+        console.log(event.overlay.getMap())
         drawingManager.setOptions({
           drawingMode: null,
           drawingControl: false
