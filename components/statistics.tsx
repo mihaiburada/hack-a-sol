@@ -66,6 +66,7 @@ const Statistics = () => {
         'Wind Offshore': '0',
         'Solar': '2'
     })
+    const [text, setText] = useState("You can configure information about general stuff");
 
     useEffect(() => {
         handleGetPanels()
@@ -131,6 +132,12 @@ const Statistics = () => {
 
     const handleOnTabConfChange = (key: string) => {
         setActiveTabConf(key)
+        if(key === 'general'){
+            setText("You can configure information about general stuff");
+        }
+        else if (key === 'co2'){
+            setText("You can configure information about CO2 emissions");
+        }
     }
 
     const getPanelNumbers = (coordinates: any) => {
@@ -199,7 +206,7 @@ const Statistics = () => {
                     <SettingOutlined style={{ paddingRight: 6, fontSize: 18 }} />
                     <h3 style={{ marginBottom: 4, paddingBottom: 0 }}>Configuration</h3>
                 </div>
-                <p style={{ padding: 0, margin: 0, fontWeight: 200 }}>You can configure information about something, idk what.</p>
+                <p style={{ padding: 0, margin: 0, fontWeight: 200 }}>{text}</p>
                 <Tabs defaultActiveKey={activeTab} onChange={handleOnTabConfChange}>
                     <TabPane tab="General" key="general">
                     </TabPane>
