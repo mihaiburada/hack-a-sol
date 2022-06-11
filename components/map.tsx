@@ -97,7 +97,7 @@ function Map({ location, reset, setDrawing, setDisableSave }: { location: string
 				drawingControl: true,
 				drawingControlOptions: {
 					position: google.maps.ControlPosition.TOP_CENTER,
-					drawingModes: [google.maps.drawing.OverlayType.POLYGON, google.maps.drawing.OverlayType.RECTANGLE]
+					drawingModes: [google.maps.drawing.OverlayType.POLYGON]
 				},
         polygonOptions:{
           clickable: false,

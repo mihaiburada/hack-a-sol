@@ -31,6 +31,9 @@ export default NextAuth({
       ...options
     }),
   ],
+  pages:{
+    signIn: "index"
+  }
 
 });
 
