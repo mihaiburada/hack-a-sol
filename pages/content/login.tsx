@@ -9,7 +9,6 @@ import { useRouter } from "next/router";
 const LoginForm = () => {
   const router = useRouter()
   const onFinish = (values:any) => {
-    console.log("Received values of form: ", values);
     router.push('/content/computations')
   };
 

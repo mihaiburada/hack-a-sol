@@ -1,14 +1,29 @@
-import { Statistic } from 'antd'
+import { message, Statistic } from 'antd'
+import { useEffect, useState } from 'react'
+import { getPanels } from '../services/panels'
 
 const Statistics = () => {
 
+    const [panels, setPanels] = useState()
+
+    useEffect(() => {
+        handleGetPanels()
+    }, [])
+
+    const handleGetPanels = async () => {
+        const panels = await getPanels()
+        if (!panels) {
+            return message.error("We are not able to receive panels")
+        }
+
+        setPanels(panels)
+    }
 
     return (
         <div
             style={{
                 width: '100%',
                 height: '100%',
-                paddingLeft: '2rem',
                 paddingRight: '2rem',
                 flex: 1,
                 display: "flex",
