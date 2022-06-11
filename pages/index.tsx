@@ -91,13 +91,7 @@ const Home: NextPage = ({ providers }) => {
 
   const { data: session } = useSession();
 
-  return (
-    <>
-      {!session && (
-        <ProvidersLoginForm providers={providers} />
-      )}
-    </>
-  );
+  return <>{!session && <ProvidersLoginForm providers={providers} />}</>;
 };
 
 export async function getServerSideProps(context) {
