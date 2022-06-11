@@ -6,6 +6,8 @@ import { useRouter } from 'next/router'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
+import * as INVERTORS from '../invertors'
+
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const objectMap = (obj: any, fn: any) =>
@@ -109,6 +111,11 @@ const Statistics = () => {
     };
     const [invertor, setInvertor] = useState(0)
     const [instalation, setInstalation] = useState(0)
+    const [availableInvertors, setAvailableInvertors] = useState<any>([])
+
+    useEffect(() => {
+        setAvailableInvertors(INVERTORS.invertors)
+    }, [])
 
 
     useEffect(() => {
@@ -121,7 +128,7 @@ const Statistics = () => {
         if (area > 0) {
             computePanelsData()
         }
-    }, [area, anualCons, reserverdSpace, activeTab])
+    }, [area, anualCons, reserverdSpace, activeTab, availableInvertors])
 
     const computePanelsData = () => {
         const panelWidth = 1650 / 1000
@@ -137,17 +144,11 @@ const Statistics = () => {
         }
         else {
             neededPanelsNumber = Math.ceil((Number(anualCons) / panelProduce / 1000) * averageSunDay * 365)
-            if (activeTab === 'extra') {
-                const inverrtor = 0
-                const instalation = 0
-            }
         }
 
         setPanelNumber(neededPanelsNumber)
 
-        const costs = (neededPanelsNumber * 1500) / 5
-
-        setCosts(costs)
+        let costs = (neededPanelsNumber * 1500) / 5
 
         // replace 365 with number of days from current year
         const panelProduced = neededPanelsNumber * (panelProduce / 1000) * 365 * averageSunDay
@@ -161,11 +162,6 @@ const Statistics = () => {
 
         setGenerated(generatedAmount)
 
-        const recoverMoney = Number((costs / (generatedAmount || 1)).toFixed(2))
-
-        setRecover(recoverMoney)
-
-
         setYearlyGen(yearlyGenerated)
 
         const deltaKW = panelProduced - Number(anualCons)
@@ -173,6 +169,26 @@ const Statistics = () => {
 
         setDeltaEuro(deltaEur)
         setDeltaKW(deltaKW)
+
+        let invertor = 0
+        let instalation = 0
+
+        const maxPowerInvertor = Math.max.apply(Math, availableInvertors.map(function (o: any) { return o.pmax; })) / 1000
+        const relatedPrice = availableInvertors.filter((f: any) => f.pmax === maxPowerInvertor * 1000)[0].price
+        invertor = Math.ceil((installedPower / maxPowerInvertor) * relatedPrice)
+        instalation = costs + invertor
+
+        setInvertor(invertor)
+        setInstalation(instalation)
+
+        costs += invertor
+        costs += instalation
+
+        setCosts(costs)
+
+        const recoverMoney = Number((costs / (generatedAmount || 1)).toFixed(2))
+
+        setRecover(recoverMoney)
 
     }
 
@@ -442,7 +458,7 @@ const Statistics = () => {
                             <Statistic title="Invertor" value={`€ ${invertor.toFixed(2)}`} />
                         </div>
                         <div style={{ flex: 1 }}>
-                            <Statistic title="Instalation" value={`${instalation.toFixed(2)} kWh`} />
+                            <Statistic title="Instalation" value={`€ ${instalation.toFixed(2)}`} />
                         </div>
                     </div>
                 }
