@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Col } from "antd";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
@@ -18,16 +18,53 @@ const Home: NextPage = () => {
 
 
         return (
-            <>
+            <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: 'center',
+              height: '100%'
+            }}
+            >
+                <Col
+                style={{
+                  height: "350px",
+                  width: "400px",
+                  maxWidth: "400px",
+                  borderRadius: 12,
+                  backgroundColor: "white",
+                  boxShadow: "0px 3px 26px -7px rgba(0, 70, 143, 0.5)",
+                  paddingLeft: "25px",
+                  paddingRight: "25px",
+                  justifyContent: "center",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Image src="/logo.png" width="200px" height="200px" />
+                </div>
                 {!session && (
-                    <><div className={styles.container}>
-                        <div className={styles.main}>
-                        Not signed in <br />
-                        <Button onClick={()=>signIn()}>Sign in</Button>
-                        </div>
-                    </div>
-                    </>
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      className="login-form-button"
+                      onClick={()=>signIn()}
+                      style={{
+                        width: "100%",
+                        height: "45px",
+                        fontSize: "17px",
+                        borderRadius: "5px",
+                        marginTop: "5px",
+                      }}
+                    >
+                      Sign in 
+                    </Button>
                 )}
+                </Col>
                 {session && (
                     <><div className={styles.container}>
                         <div className={styles.main}>
@@ -41,9 +78,10 @@ const Home: NextPage = () => {
                     </div>
                     </>
                 )}
-            </>
+            </div>
         )
 
 };
 
 export default Home;
+
