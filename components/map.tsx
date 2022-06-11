@@ -13,7 +13,7 @@ function Map({ location }: { location: string | undefined }) {
 	})
 
 	const { placesService, placePredictions, getPlacePredictions, isPlacePredictionsLoading } = usePlacesService({
-		apiKey: process.env.REACT_APP_GOOGLE
+		apiKey: GOOGLE_MAPS_KEY
 	})
 
 	useEffect(() => {
