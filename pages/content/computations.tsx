@@ -3,6 +3,7 @@ import { NextPage } from 'next'
 import { Breadcrumb, Button, Layout, Menu } from 'antd'
 import { Footer } from 'antd/lib/layout/layout'
 import { useRouter } from 'next/router'
+import { getAreaOfPolygon } from 'geolib'
 
 import Map from '../../components/map'
 import Sidebar from '../../components/sidebar'
@@ -18,16 +19,47 @@ const MapPage: NextPage = () => {
   const [disableSave, setDisableSave] = useState<boolean>(true)
   const router = useRouter()
 
-  const googlemap = useRef(null)
+	const googlemap = useRef(null)
 
-  const computeRectangle = (overlay: any) => {
-    console.log(overlay.getBounds().toJSON())
-  }
+	const polyArea = (points: { lat: number; lng: number }[]) => {
+		var i = 0,
+			area = 0,
+			len = points.length
+		while (i < len) {
+			const p1 = points[i++]
+			const p2 = points[i % len]
+			area += Math.abs(Math.abs(p1.lng * p2.lat) - Math.abs(p1.lat * p2.lng))
+
+		}
+		return Math.abs(0.5 * area)
+	}
+
+	const computeRectangle = (overlay: any) => {
+		const points: { lat: number; lng: number }[] = []
+
+		const res = overlay.getBounds()
+		points.push({ lat: res.Ab.h, lng: res.Ab.j })
+		points.push({ lat: res.Ua.h, lng: res.Ua.j })
+		points.push({ lat: res.Ab.h, lng: res.Ua.j })
+		points.push({ lat: res.Ua.h, lng: res.Ab.j })
+		localStorage.removeItem('points')
+		localStorage.setItem('points', JSON.stringify(points))
+		localStorage.setItem('area', String((getAreaOfPolygon(points))))
+	}
 
 	const computePolygon = (overlay: any) => {
+		const points: { lat: number; lng: number }[] = []
 		overlay.getPath().forEach((path: any) => {
-			console.log(path.toJSON())
+			points.push({
+				lat: path.lat(),
+				lng: path.lng()
+			})
 		})
+		console.log(polyArea(points))
+		localStorage.removeItem('points')
+		localStorage.removeItem('area')
+		localStorage.setItem('points', JSON.stringify(points))
+		localStorage.setItem('area', String((getAreaOfPolygon(points))))
 	}
 
 	const handleClick = () => {
