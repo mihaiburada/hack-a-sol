@@ -15,6 +15,7 @@ const MapPage: NextPage = () => {
   const [drawing, setDrawing] = useState<any>()
   const [reset, setReset] = useState<boolean>(false)
   const [drawnMap, setDrawnMap] = useState<any>(undefined)
+  const [disableSave, setDisableSave] = useState<boolean>(true)
   const router = useRouter()
 
   const googlemap = useRef(null)
@@ -42,6 +43,10 @@ const MapPage: NextPage = () => {
 		setReset(!reset)
 	}
 
+  useEffect(() => {
+    setDisableSave(true)
+  },[reset])
+
   return (
     <>
       <Layout style={{ minHeight: '100vh', padding: 24, backgroundColor: 'white' }}>
@@ -64,13 +69,13 @@ const MapPage: NextPage = () => {
               background: '#fff'
             }}
           >
-            <Map location={location} reset={reset} setDrawing={setDrawing}/>
+            <Map location={location} reset={reset} setDrawing={setDrawing} setDisableSave={setDisableSave}/>
           </Content>
           <Footer style={{ textAlign: 'right', backgroundColor: 'white', display: 'flex' }}>
           <Button type="primary" size="large" onClick={handleReset}>Reset drawing</Button>
           {drawnMap ?  <div id="map" ref={googlemap} /> : <div></div>}
           <div style={{flexGrow: 1}}></div>
-            <Button type="primary" size="large" onClick={handleClick}>
+            <Button type="primary" size="large" onClick={handleClick} disabled={disableSave}>
               {' '}
               Save{' '}
             </Button>

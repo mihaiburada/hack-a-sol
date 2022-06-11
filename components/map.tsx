@@ -4,7 +4,7 @@ import { GOOGLE_MAPS_KEY } from '../utils/config'
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService'
 import { message } from 'antd'
 
-function Map({ location, reset, setDrawing }: { location: string | undefined, reset: boolean, setDrawing: React.Dispatch<React.SetStateAction<any>> }) {
+function Map({ location, reset, setDrawing, setDisableSave }: { location: string | undefined, reset: boolean, setDrawing: React.Dispatch<React.SetStateAction<any>>, setDisableSave: React.Dispatch<React.SetStateAction<boolean>> }) {
 	const googlemap = useRef(null)
 	const [userPosition, setUserPosition] = useState<{ lat: number; lng: number }>()
 
@@ -113,7 +113,7 @@ function Map({ location, reset, setDrawing }: { location: string | undefined, re
 
       google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event: any) {
         setDrawing(event)
-        console.log(event.overlay.getMap())
+        setDisableSave(false)
         drawingManager.setOptions({
           drawingMode: null,
           drawingControl: false
