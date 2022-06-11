@@ -50,10 +50,10 @@ const Statistics = () => {
 
     const [grater, setGrated] = useState(false)
     const [panels, setPanels] = useState()
-    const [anualCons, setAnualCons] = useState('1')
-    const [reserverdSpace, setReservedSpace] = useState('0')
+    const [anualCons, setAnualCons] = useState('2400')
+    const [reserverdSpace, setReservedSpace] = useState('60')
     const [angle, setAngle] = useState(0)
-    const [activeTab, setActiveTab] = useState('now')
+    const [activeTab, setActiveTab] = useState('max')
     const [activeTabConf, setActiveTabConf] = useState('general')
     const [co2Options, setCo2Options] = useState({
         'Coal': '22',
@@ -66,10 +66,78 @@ const Statistics = () => {
         'Wind Offshore': '0',
         'Solar': '2'
     })
+    const [text, setText] = useState("You can configure information about general stuff");
+    const [area, setArea] = useState(0)
+    const [panelNumber, setPanelNumber] = useState(0)
+    const [costs, setCosts] = useState(0)
+    const [generated, setGenerated] = useState(0)
+    const [recover, setRecover] = useState(1)
+    const [produced, setProduced] = useState(1)
+    const [installedPower, setInstalledPower] = useState(0)
+    const [yearlyGen, setYearlyGen] = useState(0)
+    const [deltaEuro, setDeltaEuro] = useState(0)
+    const [deltaKW, setDeltaKW] = useState(0)
 
     useEffect(() => {
         handleGetPanels()
+        const areaStorage = localStorage.getItem('area')
+        setArea(Number(areaStorage))
     }, [])
+
+    useEffect(() => {
+        if (area > 0) {
+            computePanelsData()
+        }
+    }, [area, anualCons, reserverdSpace, activeTab])
+
+    const computePanelsData = () => {
+        const panelWidth = 1650 / 1000
+        const panelHeight = 992 / 1000
+        const averageSunDay = 3
+        const kwhPriceEur = 157 / 1000
+        const panelProduce = 280
+
+        const panelMSquares = (panelWidth * panelHeight)
+        let neededPanelsNumber = 1
+        if (activeTab === 'max') {
+            neededPanelsNumber = Math.floor((area - (area * (Number(reserverdSpace) / 100))) / panelMSquares)
+        }
+        else {
+            neededPanelsNumber = Math.ceil((Number(anualCons) / panelProduce / 1000) * averageSunDay * 365)
+        }
+
+        setPanelNumber(neededPanelsNumber)
+
+        const costs = (neededPanelsNumber * 1500) / 5
+
+        setCosts(costs)
+
+        // replace 365 with number of days from current year
+        const panelProduced = neededPanelsNumber * (panelProduce / 1000) * 365 * averageSunDay
+        const installedPower = (panelProduce / 1000) * neededPanelsNumber // kw
+        setInstalledPower(installedPower)
+
+        setProduced(panelProduced)
+        // const generatedAmount = panelProduced - costs
+        const yearlyGenerated = installedPower * averageSunDay * 365
+        const generatedAmount = yearlyGenerated * kwhPriceEur
+
+        setGenerated(generatedAmount)
+
+        const recoverMoney = Number((costs / (generatedAmount || 1)).toFixed(2))
+
+        setRecover(recoverMoney)
+
+
+        setYearlyGen(yearlyGenerated)
+
+        const deltaKW = panelProduced - Number(anualCons)
+        const deltaEur = deltaKW * kwhPriceEur
+
+        setDeltaEuro(deltaEur)
+        setDeltaKW(deltaKW)
+
+    }
 
     const handleGetPanels = async () => {
         const panels = await getPanels()
@@ -133,10 +201,16 @@ const Statistics = () => {
         }
     }
 
-    // const handleOnTabChange = (key: string) => setActiveTab(key)
+    const handleOnTabChange = (key: string) => setActiveTab(key)
 
     const handleOnTabConfChange = (key: string) => {
         setActiveTabConf(key)
+        if (key === 'general') {
+            setText("You can configure information about general stuff");
+        }
+        else if (key === 'co2') {
+            setText("You can configure information about CO2 emissions");
+        }
     }
 
     const getPanelNumbers = (coordinates: any) => {
@@ -163,7 +237,7 @@ const Statistics = () => {
 
     const mapCo2Configuration = () => {
         const energyTest: EnergyGeneration = {
-            kwh: Number(anualCons),
+            kwh: Number(produced),
             percentages: {
                 cycleGasTurbine: Number(co2Options['Cycle Gas Turbine']),
                 oil: Number(co2Options['Oil']),
@@ -186,7 +260,7 @@ const Statistics = () => {
             style={{
                 width: '100%',
                 height: '100%',
-                paddingRight: '2rem',
+                paddingRight: '1.5rem',
                 flex: 1,
                 display: "flex",
                 flexDirection: "column",
@@ -197,7 +271,7 @@ const Statistics = () => {
                 backgroundColor: 'white',
                 boxShadow: '0px 3px 26px -7px rgba(0, 70, 143, 0.5)',
                 height: activeTabConf === 'general' ? 300 : 500,
-                padding: '2rem',
+                padding: '1.5rem',
                 display: 'flex',
                 flexDirection: 'column'
             }}>
@@ -205,7 +279,7 @@ const Statistics = () => {
                     <SettingOutlined style={{ paddingRight: 6, fontSize: 18 }} />
                     <h3 style={{ marginBottom: 4, paddingBottom: 0 }}>Configuration</h3>
                 </div>
-                <p style={{ padding: 0, margin: 0, fontWeight: 200 }}>You can configure information about something, idk what.</p>
+                <p style={{ padding: 0, margin: 0, fontWeight: 200 }}>{text}</p>
                 <Tabs defaultActiveKey={activeTab} onChange={handleOnTabConfChange}>
                     <TabPane tab="General" key="general">
                     </TabPane>
@@ -229,7 +303,6 @@ const Statistics = () => {
                         <div style={{ paddingBottom: 6, fontWeight: 200 }}>
                             <span>Panel Angle</span>
                         </div>
-                        <div>{angle}°</div>
                         <Slider onChange={(value) => setAngle(value)} defaultValue={angle} />
                     </div>
                 </div> :
@@ -275,29 +348,41 @@ const Statistics = () => {
                 flexDirection: 'column',
                 marginTop: 24
             }}>
-                {/* <Tabs defaultActiveKey={activeTab} onChange={handleOnTabChange}>
-                    <TabPane tab="Right Now" key="now">
+                <Tabs defaultActiveKey={activeTab} onChange={handleOnTabChange}>
+                    <TabPane tab="Maximum Panels" key="max">
                     </TabPane>
-                    <TabPane tab="Current Year" key="current">
+                    <TabPane tab="Cover Anual Amount" key="cover">
                     </TabPane>
-                    <TabPane tab="Last year" key="last">
-                    </TabPane>
-                </Tabs> */}
+                </Tabs>
                 <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 6 }}>
                     <div style={{ flex: 1 }}>
-                        <Statistic title="Saved Amount / Year" value={'$ 350'} />
+                        <Statistic title="Panels Number" value={panelNumber} />
                     </div>
                     <div style={{ flex: 1 }}>
-                        <Statistic title="Panels Number" value={getPanelNumbers([])} />
+                        <Statistic title="Installed Power" value={`${Math.floor(installedPower).toFixed(2)} kW`} />
                     </div>
                     <div style={{ flex: 1 }}>
-                        <Statistic title="Panels Cost" value={'$ 500'} />
+                        <Statistic title="Panels Cost" value={`€ ${costs.toFixed(2)}`} />
                     </div>
                     <div style={{ flex: 1 }}>
-                        <Statistic title="Recover Money In" value={'2 Years'} />
+                        <Statistic title="Recover Money In" value={`${recover} Years`} />
                     </div>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', paddingTop: 56 }}>
+                <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 6 }}>
+                    <div style={{ flex: 1 }}>
+                        <Statistic title="Generated Amount / Year" value={`€ ${generated.toFixed(2)}`} />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                        <Statistic title="Generated / Year" value={`${yearlyGen.toFixed(2)} kWh`} />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                        <Statistic title="Produced - Consumed" value={`€ ${deltaEuro.toFixed(2)}`} />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                        <Statistic title="Produced - Consumed" value={`${deltaKW.toFixed(2)} kWh`} />
+                    </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', paddingTop: 24 }}>
                     <h3 style={{ marginBottom: 0, paddingBottom: 0 }}>Potential Impact</h3>
                     <p style={{ padding: 0, margin: 0, fontWeight: 200 }}>If all the viable solar installations were implemented, the amount of avoided
                         CO2 emissions from the electricity sector in the country would be:</p>
@@ -334,28 +419,25 @@ const Statistics = () => {
                         </div>
                     </div>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', paddingTop: 56 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', paddingTop: 24 }}>
                     <h3 style={{ marginBottom: 0, paddingBottom: 0 }}>Ask for Offer</h3>
                     <p style={{ padding: 0, margin: 0, fontWeight: 200 }}>If you consider that our results will help you and also the entire world you can ask for an offer.</p>
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
                         <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 6, alignItems: 'center', flex: 1 }}>
-                            <img id="img-transform" src="/company1.png" style={{ objectFit: 'fill', cursor: 'pointer' }} height={200} />
+                            <img id="img-transform" src="/company1.png" style={{ objectFit: 'fill', cursor: 'pointer' }} height={120} />
 
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 24, alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-                            <img id="img-transform" src="/company2.jpeg" style={{ objectFit: 'fill', cursor: 'pointer' }} height={200} />
+                            <img id="img-transform" src="/company2.jpeg" style={{ objectFit: 'fill', cursor: 'pointer' }} height={120} />
 
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 24, alignItems: 'center', justifyContent: 'flex-end', flex: 1 }}>
-                            <img id="img-transform" src="/company3.jpeg" style={{ objectFit: 'fill', cursor: 'pointer' }} height={200} />
+                            <img id="img-transform" src="/company3.jpeg" style={{ objectFit: 'fill', cursor: 'pointer' }} height={120} />
 
                         </div>
                     </div>
-                </div>
-                <div style={{ flex: 1, alignItems: 'center', display: 'flex', marginTop: 12 }}>
-                    <Button onClick={() => router.push("/content/computations")} type="primary">BACK</Button>
                 </div>
             </div>
         </div>
