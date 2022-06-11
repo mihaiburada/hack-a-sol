@@ -220,7 +220,7 @@ const Statistics = () => {
                     <div style={{ display: 'flex', flexDirection: 'row', height: '100%', justifyContent: 'center' }}>
                         {Object.keys(co2Options).map((key: string) => {
                             return (
-                                <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center' }}>
+                                <div key={key} style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center' }}>
                                     <div style={{ flex: 1 }}>
                                         <Slider
                                             vertical
