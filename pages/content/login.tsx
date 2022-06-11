@@ -4,20 +4,22 @@ import { Form, Input, Button, Checkbox, Grid, Row, Col } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import { url } from "inspector";
+import { useRouter } from "next/router";
 
 const LoginForm = () => {
-  const onFinish = (values) => {
+  const router = useRouter()
+  const onFinish = (values:any) => {
     console.log("Received values of form: ", values);
+    router.push('/content/computations')
   };
-
-  const backgorundImageUrl = "../../public/min_bg.jpeg";
 
   return (
     <div
       style={{
         display: "flex",
         justifyContent: "center",
-        marginTop: "100px",
+        alignItems: 'center',
+        height: '100%'
       }}
     >
       <Col
