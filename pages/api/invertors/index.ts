@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { panels } from "../../../panels";
+import { invertors } from "../../../invertors";
 type Data = {
     name: string
 }
@@ -12,7 +12,7 @@ export default (req:NextApiRequest, res:NextApiResponse) => {
     switch (method) {
         case 'GET':
             //res.json({ method: 'GET', endpoint: 'panels' });
-            res.status(200).json(panels)
+            res.status(200).json(invertors)
             break;
         case 'POST':
             res.json({ method: 'POST', endpoint: 'panels' });

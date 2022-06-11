@@ -1,4 +1,4 @@
-export const data = [
+export const panels = [
     {
         id: 1,
         modelName: "STP280 - 20/Wfw",
