@@ -22,11 +22,13 @@ export default NextAuth({
     // OAuth authentication providers..
       GoogleProvider({
       clientId: String(process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENTID),//GOOGLE_OAUTH_CLIENTID || 'invalidclientid',
-      clientSecret: String(process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_SECRET)//GOOGLE_OAUTH_CLIENT_SECRET || 'invalidsecret',
+      clientSecret: String(process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_SECRET),//GOOGLE_OAUTH_CLIENT_SECRET || 'invalidsecret',
+          ...options
     }),
     GithubProvider({
       clientId: GITHUB_OAUTH_CLIENTID,
       clientSecret: GITHUB_OAUTH_CLIENT_SECRET,
+      ...options
     }),
   ],
 
