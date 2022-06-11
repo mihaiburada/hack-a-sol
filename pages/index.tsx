@@ -8,7 +8,7 @@ import { getProviders, signIn, signOut, useSession } from "next-auth/react";
 import { url } from "inspector";
 import { useEffect } from "react";
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context:any) {
   const providers = await getProviders();
   return {
     props: { providers },
