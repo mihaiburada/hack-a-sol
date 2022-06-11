@@ -107,6 +107,9 @@ const Statistics = () => {
             },
         ],
     };
+    const [invertor, setInvertor] = useState(0)
+    const [instalation, setInstalation] = useState(0)
+
 
     useEffect(() => {
         handleGetPanels()
@@ -134,6 +137,10 @@ const Statistics = () => {
         }
         else {
             neededPanelsNumber = Math.ceil((Number(anualCons) / panelProduce / 1000) * averageSunDay * 365)
+            if (activeTab === 'extra') {
+                const inverrtor = 0
+                const instalation = 0
+            }
         }
 
         setPanelNumber(neededPanelsNumber)
@@ -398,8 +405,10 @@ const Statistics = () => {
                     </TabPane>
                     <TabPane tab="Cover Anual Amount" key="cover">
                     </TabPane>
+                    <TabPane tab="Aditional Costs" key="extra">
+                    </TabPane>
                 </Tabs>
-                <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 6 }}>
+                {activeTab !== 'extra' ? <div><div style={{ display: 'flex', flexDirection: 'row', paddingTop: 6 }}>
                     <div style={{ flex: 1 }}>
                         <Statistic title="Panels Number" value={panelNumber} />
                     </div>
@@ -413,20 +422,30 @@ const Statistics = () => {
                         <Statistic title="Recover Money In" value={`${recover} Years`} />
                     </div>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 6 }}>
-                    <div style={{ flex: 1 }}>
-                        <Statistic title="Generated Amount / Year" value={`€ ${generated.toFixed(2)}`} />
+                    <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 6 }}>
+                        <div style={{ flex: 1 }}>
+                            <Statistic title="Generated Amount / Year" value={`€ ${generated.toFixed(2)}`} />
+                        </div>
+                        <div style={{ flex: 1 }}>
+                            <Statistic title="Generated / Year" value={`${yearlyGen.toFixed(2)} kWh`} />
+                        </div>
+                        <div style={{ flex: 1 }}>
+                            <Statistic title="Produced - Consumed" value={`€ ${deltaEuro.toFixed(2)}`} />
+                        </div>
+                        <div style={{ flex: 1 }}>
+                            <Statistic title="Produced - Consumed" value={`${deltaKW.toFixed(2)} kWh`} />
+                        </div>
                     </div>
-                    <div style={{ flex: 1 }}>
-                        <Statistic title="Generated / Year" value={`${yearlyGen.toFixed(2)} kWh`} />
+                </div> :
+                    <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 8 }}>
+                        <div style={{ flex: 1 }}>
+                            <Statistic title="Invertor" value={`€ ${invertor.toFixed(2)}`} />
+                        </div>
+                        <div style={{ flex: 1 }}>
+                            <Statistic title="Instalation" value={`${instalation.toFixed(2)} kWh`} />
+                        </div>
                     </div>
-                    <div style={{ flex: 1 }}>
-                        <Statistic title="Produced - Consumed" value={`€ ${deltaEuro.toFixed(2)}`} />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                        <Statistic title="Produced - Consumed" value={`${deltaKW.toFixed(2)} kWh`} />
-                    </div>
-                </div>
+                }
                 <div style={{ display: 'flex', flexDirection: 'column', paddingTop: 24 }}>
                     <h3 style={{ marginBottom: 0, paddingBottom: 0 }}>Potential Impact</h3>
                     <p style={{ padding: 0, margin: 0, fontWeight: 200 }}>If all the viable solar installations were implemented, the amount of avoided
@@ -484,8 +503,8 @@ const Statistics = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 
