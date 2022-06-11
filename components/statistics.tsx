@@ -62,7 +62,7 @@ const Statistics = () => {
         setPanels(panels)
     }
 
-    const computeKWh = ( energyGeneration: EnergyGeneration ) => {
+    const computeCarbonFootprint = ( energyGeneration: EnergyGeneration ) => {
         let sum = 0;
         let carbonFootprint = 0;
         objectMap(energyGeneration.percentages, (percent: any) => sum += percent)
