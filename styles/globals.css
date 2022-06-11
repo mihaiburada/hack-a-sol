@@ -4,9 +4,20 @@ body {
   margin: 0;
   padding: 0;
 }
+
 #__next {
   height: 100%;
 }
+
 #map {
   height: 100%;
+}
+
+#img-transform {
+  transition: 0.2s all ease-in-out;
+
+}
+
+#img-transform:hover {
+  transform: scale(1.1);
 }

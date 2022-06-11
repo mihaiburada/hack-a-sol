@@ -1,12 +1,10 @@
 import { SmileOutlined } from '@ant-design/icons';
-import { Button, Result } from 'antd';
+import { Result } from 'antd';
 
-import { useRouter } from 'next/router'
 
 
 const SelectionVisualisation = () => {
 
-    const router = useRouter()
 
     return (
         <div
@@ -19,7 +17,7 @@ const SelectionVisualisation = () => {
                 flexDirection: "column",
             }}
         >
-            <div>
+            <div >
                 <Result
                     icon={<SmileOutlined />}
                     title="Great, we have done all the operations!"
@@ -28,9 +26,6 @@ const SelectionVisualisation = () => {
             </div>
             <div style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <img src="/image_house.jpeg" style={{ objectFit: 'fill', width: '100%' }} />
-            </div>
-            <div style={{ flex: 1, justifyContent: 'flex-end', display: 'flex', flexDirection: 'column' }}>
-                <Button onClick={() => router.push('/content/computations')} type="primary">NEW COMPUTING</Button>
             </div>
         </div>
     )
