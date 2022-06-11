@@ -125,6 +125,10 @@ const Statistics = () => {
         setActiveTabConf(key)
     }
 
+    const getPanelNumbers = (coordinates: any) => {
+        return 30
+    }
+
     const onSliderCo2Change = (value: any, key: string) => {
         const co2OptionsCopy: any = { ...co2Options } as any
         (co2OptionsCopy as any)[key] = String(value)
@@ -261,7 +265,10 @@ const Statistics = () => {
                         <Statistic title="Saved Amount / Year" value={'$ 350'} />
                     </div>
                     <div style={{ flex: 1 }}>
-                        <Statistic title="Panel Cost" value={'$ 500'} />
+                        <Statistic title="Panels Number" value={getPanelNumbers([])} />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                        <Statistic title="Panels Cost" value={'$ 500'} />
                     </div>
                     <div style={{ flex: 1 }}>
                         <Statistic title="Recover Money In" value={'2 Years'} />

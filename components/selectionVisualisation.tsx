@@ -25,7 +25,8 @@ const SelectionVisualisation = () => {
                 />
             </div>
             <div style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                <Area3D />
+                {/* <Area3D /> */}
+                <img src="/Users/silviumanzur/Documents/work/hacktm/rooftop-detection-python/output1.jpg" width={200} height={200} />
             </div>
         </div>
     )
