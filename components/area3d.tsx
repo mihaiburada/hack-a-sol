@@ -1,6 +1,4 @@
-import * as THREE from 'three'
 import React, { useEffect, useRef, useState } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
 
 // const Box = () => {
 //     return (
