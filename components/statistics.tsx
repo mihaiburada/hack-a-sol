@@ -48,6 +48,7 @@ const Statistics = () => {
 
     const router = useRouter()
 
+    const [grater, setGrated] = useState(false)
     const [panels, setPanels] = useState()
     const [anualCons, setAnualCons] = useState('1')
     const [reserverdSpace, setReservedSpace] = useState('0')
@@ -126,14 +127,22 @@ const Statistics = () => {
     }
     }
 
-    const handleOnTabChange = (key: string) => setActiveTab(key)
+    // const handleOnTabChange = (key: string) => setActiveTab(key)
 
     const handleOnTabConfChange = (key: string) => {
         setActiveTabConf(key)
     }
 
     const getPanelNumbers = (coordinates: any) => {
-        return 30
+        const numberOfPanels = 30
+        const panelPower = 280
+
+        if ((numberOfPanels * panelPower) > Number(anualCons)) {
+        }
+        else {
+        }
+
+        return numberOfPanels
     }
 
     const onSliderCo2Change = (value: any, key: string) => {
@@ -259,14 +268,14 @@ const Statistics = () => {
                 flexDirection: 'column',
                 marginTop: 24
             }}>
-                <Tabs defaultActiveKey={activeTab} onChange={handleOnTabChange}>
+                {/* <Tabs defaultActiveKey={activeTab} onChange={handleOnTabChange}>
                     <TabPane tab="Right Now" key="now">
                     </TabPane>
                     <TabPane tab="Current Year" key="current">
                     </TabPane>
                     <TabPane tab="Last year" key="last">
                     </TabPane>
-                </Tabs>
+                </Tabs> */}
                 <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 6 }}>
                     <div style={{ flex: 1 }}>
                         <Statistic title="Saved Amount / Year" value={'$ 350'} />
