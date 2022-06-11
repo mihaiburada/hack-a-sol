@@ -11,7 +11,7 @@ import {
 } from "../../../utils/config";
 
 const options = {
-  site: NEXTAUTH_URL,
+  site: process.env.NEXT_PUBLIC_NEXTAUTH_URL,
   session: {
     jwt: true,
     maxAge: 4 * 60 * 60, // the session will last 4h
@@ -21,17 +21,15 @@ export default NextAuth({
   providers: [
     // OAuth authentication providers..
     GoogleProvider({
-      clientId: GOOGLE_OAUTH_CLIENTID || 'invalidclientid',
-      clientSecret: GOOGLE_OAUTH_CLIENT_SECRET || 'invalidsecret',
+      clientId: process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENTID,//GOOGLE_OAUTH_CLIENTID || 'invalidclientid',
+      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_SECRET//GOOGLE_OAUTH_CLIENT_SECRET || 'invalidsecret',
     }),
     GithubProvider({
       clientId: GITHUB_OAUTH_CLIENTID,
       clientSecret: GITHUB_OAUTH_CLIENT_SECRET,
     }),
   ],
-  pages: {
-    signIn: "index",
-  },
+
 });
 
 //export default (req:NextApiRequest, res:NextApiResponse, options:any) => NextAuth(req, res, options)

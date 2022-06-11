@@ -12,11 +12,12 @@ import { calculateOptimumTilt } from '../../services/calculatePanelsInArea'
 const { Header, Content, Sider } = Layout
 
 const MapPage: NextPage = () => {
-	const [location, setLocation] = useState<string>()
-	const [drawing, setDrawing] = useState<any>()
-	const [reset, setReset] = useState<boolean>(false)
-	const [drawnMap, setDrawnMap] = useState<any>(undefined)
-	const router = useRouter()
+  const [location, setLocation] = useState<string>()
+  const [drawing, setDrawing] = useState<any>()
+  const [reset, setReset] = useState<boolean>(false)
+  const [drawnMap, setDrawnMap] = useState<any>(undefined)
+  const [disableSave, setDisableSave] = useState<boolean>(true)
+  const router = useRouter()
 
 	const googlemap = useRef(null)
 
@@ -74,45 +75,47 @@ const MapPage: NextPage = () => {
 		setReset(!reset)
 	}
 
-	return (
-		<>
-			<Layout style={{ minHeight: '100vh', padding: 24, backgroundColor: 'white' }}>
-				<Sider
-					width={400}
-					style={{
-						borderRadius: 12,
-						backgroundColor: 'white',
-						boxShadow: '0px 3px 26px -7px rgba(0, 70, 143, 0.5)'
-					}}
-				>
-					<Sidebar onLocationChange={(location: string) => setLocation(location)} />
-				</Sider>
-				<Layout>
-					<Content
-						style={{
-							paddingLeft: 24,
-							margin: 0,
-							minHeight: 280,
-							background: '#fff'
-						}}
-					>
-						<Map location={location} reset={reset} setDrawing={setDrawing} />
-					</Content>
-					<Footer style={{ textAlign: 'right', backgroundColor: 'white', display: 'flex' }}>
-						<Button type="primary" size="large" onClick={handleReset}>
-							Reset drawing
-						</Button>
-						{drawnMap ? <div id="map" ref={googlemap} /> : <div></div>}
-						<div style={{ flexGrow: 1 }}></div>
-						<Button type="primary" size="large" onClick={handleClick}>
-							{' '}
-							Save{' '}
-						</Button>
-					</Footer>
-				</Layout>
-			</Layout>
-		</>
-	)
+  useEffect(() => {
+    setDisableSave(true)
+  },[reset])
+
+  return (
+    <>
+      <Layout style={{ minHeight: '100vh', padding: 24, backgroundColor: 'white' }}>
+        <Sider
+          width={400}
+          style={{
+            borderRadius: 12,
+            backgroundColor: 'white',
+            boxShadow: '0px 3px 26px -7px rgba(0, 70, 143, 0.5)'
+          }}
+        >
+          <Sidebar onLocationChange={(location: string) => setLocation(location)} />
+        </Sider>
+        <Layout>
+          <Content
+            style={{
+              paddingLeft: 24,
+              margin: 0,
+              minHeight: 280,
+              background: '#fff'
+            }}
+          >
+            <Map location={location} reset={reset} setDrawing={setDrawing} setDisableSave={setDisableSave}/>
+          </Content>
+          <Footer style={{ textAlign: 'right', backgroundColor: 'white', display: 'flex' }}>
+          <Button type="primary" size="large" onClick={handleReset}>Reset drawing</Button>
+          {drawnMap ?  <div id="map" ref={googlemap} /> : <div></div>}
+          <div style={{flexGrow: 1}}></div>
+            <Button type="primary" size="large" onClick={handleClick} disabled={disableSave}>
+              {' '}
+              Save{' '}
+            </Button>
+          </Footer>
+        </Layout>
+      </Layout>
+    </>
+  )
 }
 
 export default MapPage

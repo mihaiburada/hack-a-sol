@@ -48,6 +48,7 @@ const Statistics = () => {
 
     const router = useRouter()
 
+    const [grater, setGrated] = useState(false)
     const [panels, setPanels] = useState()
     const [anualCons, setAnualCons] = useState('1')
     const [reserverdSpace, setReservedSpace] = useState('0')
@@ -79,12 +80,18 @@ const Statistics = () => {
         setPanels(panels)
     }
 
-    const computeCarbonFootprint = (energyGeneration: EnergyGeneration) => {
+    const computeCarbonFootprint = (energyGeneration: EnergyGeneration, carsOrTrees?: 'cars' | 'trees') => {
         let sum = 0;
         let carbonFootprint = 0;
         objectMap(energyGeneration.percentages, (percent: any) => sum += percent)
         if (sum !== 100) {
-            return 0
+            const diff = 100 - sum
+            if (isNaN(diff) || diff === 100) return
+            const keys = Object.keys(co2Options)
+            const co2OptionsCopy = { ...co2Options }
+            const randomKey: any = (keys as any)[Math.floor(Math.random() * 2)] as any
+            (co2OptionsCopy as any)[randomKey] = String(Number((co2OptionsCopy as any)[randomKey]) + diff)
+            setCo2Options(co2OptionsCopy)
         } else {
             Object.keys(energyGeneration.percentages).map(function (key, index) {
                 if (key === "cycleGasTurbine") {
@@ -115,18 +122,33 @@ const Statistics = () => {
                     carbonFootprint += 0.058 * ((energyGeneration.percentages[key] * energyGeneration.kwh) / 100)
                 }
             });
-            return Number(carbonFootprint / 1000).toFixed(2)
+
+            if (carsOrTrees === 'cars') {
+                return Number((carbonFootprint / 1000) / 4.6).toFixed(1)
+            } else if (carsOrTrees === 'trees') {
+                return Number((carbonFootprint / 1000) / 0.2).toFixed(0)
+            } else {
+                return Number(carbonFootprint / 1000).toFixed(2)
+            }
         }
     }
 
-    const handleOnTabChange = (key: string) => setActiveTab(key)
+    // const handleOnTabChange = (key: string) => setActiveTab(key)
 
     const handleOnTabConfChange = (key: string) => {
         setActiveTabConf(key)
     }
 
     const getPanelNumbers = (coordinates: any) => {
-        return 30
+        const numberOfPanels = 30
+        const panelPower = 280
+
+        if ((numberOfPanels * panelPower) > Number(anualCons)) {
+        }
+        else {
+        }
+
+        return numberOfPanels
     }
 
     const onSliderCo2Change = (value: any, key: string) => {
@@ -207,13 +229,14 @@ const Statistics = () => {
                         <div style={{ paddingBottom: 6, fontWeight: 200 }}>
                             <span>Panel Angle</span>
                         </div>
+                        <div>{angle}°</div>
                         <Slider onChange={(value) => setAngle(value)} defaultValue={angle} />
                     </div>
                 </div> :
                     <div style={{ display: 'flex', flexDirection: 'row', height: '100%', justifyContent: 'center' }}>
                         {Object.keys(co2Options).map((key: string) => {
                             return (
-                                <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center' }}>
+                                <div key={key} style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center' }}>
                                     <div style={{ flex: 1 }}>
                                         <Slider
                                             vertical
@@ -252,14 +275,14 @@ const Statistics = () => {
                 flexDirection: 'column',
                 marginTop: 24
             }}>
-                <Tabs defaultActiveKey={activeTab} onChange={handleOnTabChange}>
+                {/* <Tabs defaultActiveKey={activeTab} onChange={handleOnTabChange}>
                     <TabPane tab="Right Now" key="now">
                     </TabPane>
                     <TabPane tab="Current Year" key="current">
                     </TabPane>
                     <TabPane tab="Last year" key="last">
                     </TabPane>
-                </Tabs>
+                </Tabs> */}
                 <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 6 }}>
                     <div style={{ flex: 1 }}>
                         <Statistic title="Saved Amount / Year" value={'$ 350'} />
@@ -294,7 +317,7 @@ const Statistics = () => {
                             <img src="/caricon.png" style={{ objectFit: 'fill' }} height={65} />
                             <div style={{ display: 'flex', flexDirection: 'column', paddingLeft: 24 }}>
                                 <span style={{ fontWeight: 200 }}>Passenger cars</span>
-                                <span style={{ fontSize: 26 }}>0.7M</span>
+                                <span style={{ fontSize: 26 }}>{computeCarbonFootprint(mapCo2Configuration(), 'cars')}</span>
                                 <span style={{ fontWeight: 200 }}>taken off the road</span>
                             </div>
                         </div>
@@ -305,7 +328,7 @@ const Statistics = () => {
                             <img src="/treeicon.png" style={{ objectFit: 'fill' }} height={65} />
                             <div style={{ display: 'flex', flexDirection: 'column', paddingLeft: 24 }}>
                                 <span style={{ fontWeight: 200 }}>Tree seedlings</span>
-                                <span style={{ fontSize: 26 }}>7.2M</span>
+                                <span style={{ fontSize: 26 }}>{computeCarbonFootprint(mapCo2Configuration(), 'trees')}</span>
                                 <span style={{ fontWeight: 200 }}>grown for 10 yrs</span>
                             </div>
                         </div>
