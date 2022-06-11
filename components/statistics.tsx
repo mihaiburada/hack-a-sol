@@ -79,7 +79,7 @@ const Statistics = () => {
         setPanels(panels)
     }
 
-    const computeCarbonFootprint = (energyGeneration: EnergyGeneration) => {
+    const computeCarbonFootprint = (energyGeneration: EnergyGeneration, carsOrTrees?: 'cars' | 'trees') => {
         let sum = 0;
         let carbonFootprint = 0;
         objectMap(energyGeneration.percentages, (percent: any) => sum += percent)
@@ -115,8 +115,15 @@ const Statistics = () => {
                     carbonFootprint += 0.058 * ((energyGeneration.percentages[key] * energyGeneration.kwh) / 100)
                 }
             });
-            return Number(carbonFootprint / 1000).toFixed(2)
-        }
+
+            if(carsOrTrees === 'cars'){
+               return Number((carbonFootprint / 1000) / 4.6).toFixed(1)
+            }else if(carsOrTrees === 'trees'){
+                return Number((carbonFootprint / 1000) / 0.2).toFixed(0)
+            }else{
+                return Number(carbonFootprint / 1000).toFixed(2)
+            }
+    }
     }
 
     const handleOnTabChange = (key: string) => setActiveTab(key)
@@ -294,7 +301,7 @@ const Statistics = () => {
                             <img src="/caricon.png" style={{ objectFit: 'fill' }} height={65} />
                             <div style={{ display: 'flex', flexDirection: 'column', paddingLeft: 24 }}>
                                 <span style={{ fontWeight: 200 }}>Passenger cars</span>
-                                <span style={{ fontSize: 26 }}>0.7M</span>
+                                <span style={{ fontSize: 26 }}>{computeCarbonFootprint(mapCo2Configuration(),'cars')}</span>
                                 <span style={{ fontWeight: 200 }}>taken off the road</span>
                             </div>
                         </div>
@@ -305,7 +312,7 @@ const Statistics = () => {
                             <img src="/treeicon.png" style={{ objectFit: 'fill' }} height={65} />
                             <div style={{ display: 'flex', flexDirection: 'column', paddingLeft: 24 }}>
                                 <span style={{ fontWeight: 200 }}>Tree seedlings</span>
-                                <span style={{ fontSize: 26 }}>7.2M</span>
+                                <span style={{ fontSize: 26 }}>{computeCarbonFootprint(mapCo2Configuration(),'trees')}</span>
                                 <span style={{ fontWeight: 200 }}>grown for 10 yrs</span>
                             </div>
                         </div>
