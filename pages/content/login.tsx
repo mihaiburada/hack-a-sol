@@ -23,7 +23,7 @@ const LoginForm = () => {
     >
       <Col
         style={{
-          height: "450px",
+          height: "350px",
           width: "400px",
           maxWidth: "400px",
           borderRadius: 12,
@@ -53,42 +53,6 @@ const LoginForm = () => {
             width: "100%",
           }}
         >
-          <Form.Item
-            name="username"
-            rules={[
-              {
-                required: true,
-                message: "Please input your Username!",
-              },
-            ]}
-          >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Username"
-              style={{
-                borderRadius: "5px",
-              }}
-            />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: "Please input your Password!",
-              },
-            ]}
-          >
-            <Input
-              prefix={<LockOutlined className="site-form-item-icon" />}
-              type="password"
-              placeholder="Password"
-              style={{
-                borderRadius: "5px",
-              }}
-            />
-          </Form.Item>
-
           <Form.Item>
             <Button
               type="primary"
@@ -96,20 +60,14 @@ const LoginForm = () => {
               className="login-form-button"
               style={{
                 width: "100%",
+                height: "45px",
+                fontSize: "17px",
                 borderRadius: "5px",
                 marginTop: "5px",
               }}
             >
-              Log in
+              Sign in with Google
             </Button>
-            <div
-              style={{
-                marginLeft: "15px",
-                marginTop: "15px",
-              }}
-            >
-              Or <a href="">register now!</a>
-            </div>
           </Form.Item>
         </Form>
       </Col>
