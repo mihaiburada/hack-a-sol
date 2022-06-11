@@ -11,7 +11,7 @@ import {
 } from "../../../utils/config";
 
 const options = {
-  site: NEXTAUTH_URL,
+  site: process.env.NEXT_PUBLIC_NEXTAUTH_URL,
   session: {
     jwt: true,
     maxAge: 4 * 60 * 60, // the session will last 4h
