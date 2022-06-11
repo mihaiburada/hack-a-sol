@@ -5,6 +5,7 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import { url } from "inspector";
 import { useRouter } from "next/router";
+import { signIn } from 'next-auth/react'
 
 const LoginForm = () => {
   const router = useRouter()
@@ -58,6 +59,7 @@ const LoginForm = () => {
               type="primary"
               htmlType="submit"
               className="login-form-button"
+              onClick={()=>signIn()}
               style={{
                 width: "100%",
                 height: "45px",
@@ -66,7 +68,7 @@ const LoginForm = () => {
                 marginTop: "5px",
               }}
             >
-              Sign in with Google
+              Sign in 
             </Button>
           </Form.Item>
         </Form>
