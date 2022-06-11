@@ -176,7 +176,7 @@ const Statistics = () => {
         const maxPowerInvertor = Math.max.apply(Math, availableInvertors.map(function (o: any) { return o.pmax; })) / 1000
         const relatedPrice = availableInvertors.filter((f: any) => f.pmax === maxPowerInvertor * 1000)[0].price
         invertor = Math.ceil((installedPower / maxPowerInvertor) * relatedPrice)
-        instalation = costs + invertor
+        instalation = (costs + invertor) * 0.8
 
         setInvertor(invertor)
         setInstalation(instalation)
@@ -504,17 +504,17 @@ const Statistics = () => {
                     <p style={{ padding: 0, margin: 0, fontWeight: 200 }}>If you consider that our results will help you and also the entire world you can ask for an offer.</p>
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
                         <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 6, alignItems: 'center', flex: 1 }}>
-                            <img id="img-transform" src="/company1.png" style={{ objectFit: 'fill', cursor: 'pointer' }} height={120} />
+                            <img onClick={() => message.info("Congrats! An offer was sent to your email.")} id="img-transform" src="/company1.png" style={{ objectFit: 'fill', cursor: 'pointer' }} height={120} />
 
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 24, alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-                            <img id="img-transform" src="/company2.jpeg" style={{ objectFit: 'fill', cursor: 'pointer' }} height={120} />
+                            <img onClick={() => message.info("Congrats! An offer was sent to your email.")} id="img-transform" src="/company2.jpeg" style={{ objectFit: 'fill', cursor: 'pointer' }} height={120} />
 
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'row', paddingTop: 24, alignItems: 'center', justifyContent: 'flex-end', flex: 1 }}>
-                            <img id="img-transform" src="/company3.jpeg" style={{ objectFit: 'fill', cursor: 'pointer' }} height={120} />
+                            <img onClick={() => message.info("Congrats! An offer was sent to your email.")} id="img-transform" src="/company3.jpeg" style={{ objectFit: 'fill', cursor: 'pointer' }} height={120} />
 
                         </div>
                     </div>
