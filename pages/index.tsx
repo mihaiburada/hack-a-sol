@@ -43,7 +43,7 @@ const Home = ({ providers }: { providers: any }) => {
       >
         <Col
           style={{
-            height: "350px",
+            height: "390px",
             width: "400px",
             maxWidth: "400px",
             borderRadius: 12,
@@ -58,13 +58,13 @@ const Home = ({ providers }: { providers: any }) => {
             style={{
               display: "flex",
               justifyContent: "center",
-              marginBottom: 50
+              marginBottom: 50,
             }}
           >
             <Image src="/logo.png" width="200px" height="150px" />
           </div>
           {!session && (
-            <>
+            <div>
               {Object.values(providers).map((provider: any) => (
                 <div key={provider.name}>
                   <Button
@@ -85,7 +85,45 @@ const Home = ({ providers }: { providers: any }) => {
                   </Button>
                 </div>
               ))}
-            </>
+              <div
+                style={{
+                  marginTop: "35px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div>
+                    Made with{" "}
+                    <span role="img" aria-label="heart">
+                      ❤️
+                    </span>{" "}
+                    in{" "}
+                    <a
+                      href={
+                        "https://wego.here.com/romania/dumbr%C4%83vi%C8%9Ba"
+                      }
+                    >
+                      Dumbravita
+                    </a>{" "}
+                    for <a href={"https://hacktm.ro"}>HackTM 2022</a>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <a href={"https://www.facebook.com/hashtag/fullstackdev"}>
+                    #fullStackDev
+                  </a>
+                </div>
+              </div>
+            </div>
           )}
         </Col>
       </div>
