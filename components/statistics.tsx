@@ -1,4 +1,4 @@
-import { message, Statistic, Input, Slider, Button, Tabs, Col, InputNumber, Row } from 'antd'
+import { message, Statistic, Input, Slider, Collapse, Tabs, Col, InputNumber, Select } from 'antd'
 import { useEffect, useState } from 'react'
 import { SettingOutlined } from '@ant-design/icons'
 import { getPanels } from '../services/panels'
@@ -7,6 +7,8 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
 import * as INVERTORS from '../invertors'
+const { Panel } = Collapse;
+const { Option } = Select;
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -112,6 +114,9 @@ const Statistics = () => {
     const [invertor, setInvertor] = useState(0)
     const [instalation, setInstalation] = useState(0)
     const [availableInvertors, setAvailableInvertors] = useState<any>([])
+    const [euroPrice, setEuroPrice] = useState(5)
+    const [averageSunDay, setAverageSunDay] = useState(3)
+    const [rooftopType, setRooftopType] = useState('plain')
 
     useEffect(() => {
         setAvailableInvertors(INVERTORS.invertors)
@@ -128,12 +133,11 @@ const Statistics = () => {
         if (area > 0) {
             computePanelsData()
         }
-    }, [area, anualCons, reserverdSpace, activeTab, availableInvertors])
+    }, [area, anualCons, reserverdSpace, activeTab, availableInvertors, averageSunDay, euroPrice])
 
     const computePanelsData = () => {
         const panelWidth = 1650 / 1000
         const panelHeight = 992 / 1000
-        const averageSunDay = 3
         const kwhPriceEur = 157 / 1000
         const panelProduce = 280
 
@@ -148,7 +152,7 @@ const Statistics = () => {
 
         setPanelNumber(neededPanelsNumber)
 
-        let costs = (neededPanelsNumber * 1500) / 5
+        let costs = (neededPanelsNumber * 1500) / euroPrice
 
         // replace 365 with number of days from current year
         const panelProduced = neededPanelsNumber * (panelProduce / 1000) * 365 * averageSunDay
@@ -323,7 +327,7 @@ const Statistics = () => {
                 borderRadius: 12,
                 backgroundColor: 'white',
                 boxShadow: '0px 3px 26px -7px rgba(0, 70, 143, 0.5)',
-                height: activeTabConf === 'general' ? 300 : 500,
+                height: activeTabConf === 'general' ? 400 : 500,
                 padding: '1.5rem',
                 display: 'flex',
                 flexDirection: 'column'
@@ -348,24 +352,58 @@ const Statistics = () => {
                     <TabPane tab="Metrics" key="metrics">
                     </TabPane>
                 </Tabs>
-                {activeTabConf === 'general' ? <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-                    <div style={{ flex: 1, paddingRight: 24 }}>
-                        <div style={{ paddingBottom: 6, fontWeight: 200 }}>
-                            <span>Anual Consumption (KWh)</span>
+                {activeTabConf === 'general' ? <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                        <div style={{ flex: 1, paddingRight: 24 }}>
+                            <div style={{ paddingBottom: 6, fontWeight: 200 }}>
+                                <span>Anual Consumption (KWh)</span>
+                            </div>
+                            <Input type="number" value={anualCons} onChange={e => setAnualCons(e.target.value)} style={{ minWidth: 270 }} placeholder="Type your anual consumption ..." />
                         </div>
-                        <Input type="number" value={anualCons} onChange={e => setAnualCons(e.target.value)} style={{ minWidth: 270 }} placeholder="Type your anual consumption ..." />
+                        <div style={{ flex: 1, paddingRight: 24 }}>
+                            <div style={{ paddingBottom: 6, fontWeight: 200 }}>
+                                <span>Reserved Space (%)</span>
+                            </div>
+                            <Input type="number" value={reserverdSpace} onChange={e => setReservedSpace(e.target.value)} style={{ minWidth: 270 }} placeholder="Type your reserved space ..." />
+                        </div>
+                        <div style={{ flex: 1, paddingRight: 24 }}>
+                            <div style={{ paddingBottom: 6, fontWeight: 200 }}>
+                                <span>Rooftop Type</span>
+                            </div>
+                            <Select value={rooftopType} style={{minWidth: 270}} onChange={(value) => {setRooftopType(value)}}>
+                                <Option value="plain">Plain</Option>
+                                <Option value="single">Single Slope</Option>
+                                <Option value="complex">
+                                    Multiple Slopes
+                                </Option>
+                            </Select>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ paddingBottom: 6, fontWeight: 200 }}>
+                                <span>Panel Angle</span>
+                            </div>
+                            <Slider onChange={(value) => setAngle(value)} defaultValue={angle} />
+                        </div>
                     </div>
-                    <div style={{ flex: 1, paddingRight: 24 }}>
-                        <div style={{ paddingBottom: 6, fontWeight: 200 }}>
-                            <span>Reserved Space (%)</span>
-                        </div>
-                        <Input type="number" value={reserverdSpace} onChange={e => setReservedSpace(e.target.value)} style={{ minWidth: 270 }} placeholder="Type your reserved space ..." />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                        <div style={{ paddingBottom: 6, fontWeight: 200 }}>
-                            <span>Panel Angle</span>
-                        </div>
-                        <Slider onChange={(value) => setAngle(value)} defaultValue={angle} />
+                    <div style={{ paddingTop: 12 }}>
+                        <Collapse onChange={() => { }}>
+                            <Panel header="Parameters Configuration" key="1">
+                                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', marginRight: 12 }}>
+                                        <div style={{ paddingBottom: 6, fontWeight: 200 }}>
+                                            <span>Average Sun / Day</span>
+                                        </div>
+                                        <Input type="number" value={averageSunDay} onChange={e => setAverageSunDay(Number(e.target.value))} style={{ minWidth: 270 }} placeholder="Type average sun day ..." />
+                                    </div>
+                                    <div style={{ flex: 1, flexDirection: 'column', display: 'flex' }}>
+                                        <div style={{ paddingBottom: 6, fontWeight: 200 }}>
+                                            <span>Euro Exchange Rate</span>
+                                        </div>
+                                        <Input type="number" min={1} value={euroPrice} onChange={e => setEuroPrice(e.target.value === '' ? 1 : Number(e.target.value))} style={{ minWidth: 270 }} placeholder="Type euro exchange ..." />
+                                    </div>
+                                </div>
+                            </Panel>
+                        </Collapse>
                     </div>
                 </div> : activeTabConf === 'co2' ?
                     <div style={{ display: 'flex', flexDirection: 'row', height: '100%', justifyContent: 'center' }}>
@@ -462,7 +500,7 @@ const Statistics = () => {
                         </div>
                     </div>
                 }
-                <div style={{ display: 'flex', flexDirection: 'column', paddingTop: 24 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', paddingTop: 48 }}>
                     <h3 style={{ marginBottom: 0, paddingBottom: 0 }}>Potential Impact</h3>
                     <p style={{ padding: 0, margin: 0, fontWeight: 200 }}>If all the viable solar installations were implemented, the amount of avoided
                         CO2 emissions from the electricity sector in the country would be:</p>
@@ -499,7 +537,7 @@ const Statistics = () => {
                         </div>
                     </div>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', paddingTop: 24 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', paddingTop: 48 }}>
                     <h3 style={{ marginBottom: 0, paddingBottom: 0 }}>Ask for Offer</h3>
                     <p style={{ padding: 0, margin: 0, fontWeight: 200 }}>If you consider that our results will help you and also the entire world you can ask for an offer.</p>
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
