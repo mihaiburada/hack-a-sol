@@ -29,7 +29,7 @@ const energyTest: EnergyGeneration = {
         pumpedStorage: 0,
         nonPumpedStorageHydro: 0,
         windOnShore: 50,
-        windOfShore: 40,
+        others: 40,
         solar: 10
     }
 }
@@ -42,7 +42,7 @@ export interface EnergySourcesPercentage {
     pumpedStorage: number,
     nonPumpedStorageHydro: number,
     windOnShore: number,
-    windOfShore: number,
+    others: number,
     solar: number
 }
 
@@ -64,15 +64,15 @@ const Statistics = () => {
     const [activeTab, setActiveTab] = useState('max')
     const [activeTabConf, setActiveTabConf] = useState('general')
     const [co2Options, setCo2Options] = useState({
-        'Coal': '22',
-        'Oil': '1',
-        'Cycle Gas Turbine': '16',
-        'Nuclear': '21',
+        'Coal': '17',
+        'Oil': '0',
+        'Cycle Gas Turbine': '14',
+        'Nuclear': '8',
         'PS': '0',
-        'NPS Hydro': '26',
-        'Wind Onshore': '12',
-        'Wind Offshore': '0',
-        'Solar': '2'
+        'NPS Hydro': '36',
+        'Wind Onshore': '16',
+        'Others': '1',
+        'Solar': '8'
     })
     const [text, setText] = useState("You can configure general information");
     const [area, setArea] = useState(0)
@@ -240,8 +240,8 @@ const Statistics = () => {
                 if (key === "windOnShore") {
                     carbonFootprint += 0.004 * ((energyGeneration.percentages[key] * energyGeneration.kwh) / 100)
                 }
-                if (key === "windOfShore") {
-                    carbonFootprint += 0.005 * ((energyGeneration.percentages[key] * energyGeneration.kwh) / 100)
+                if (key === "others") {
+                    carbonFootprint += 0.1 * ((energyGeneration.percentages[key] * energyGeneration.kwh) / 100)
                 }
                 if (key === "solar") {
                     carbonFootprint += 0.058 * ((energyGeneration.percentages[key] * energyGeneration.kwh) / 100)
@@ -303,7 +303,7 @@ const Statistics = () => {
                 pumpedStorage: Number(co2Options['PS']),
                 nonPumpedStorageHydro: Number(co2Options['NPS Hydro']),
                 windOnShore: Number(co2Options['Wind Onshore']),
-                windOfShore: Number(co2Options['Wind Offshore']),
+                others: Number(co2Options['Others']),
                 solar: Number(co2Options['Solar']),
             }
         }

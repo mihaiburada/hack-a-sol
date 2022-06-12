@@ -48,7 +48,9 @@ function Map({ location, reset, setDrawing, setDisableSave }: { location: string
 			const google = window.google
 			map = new google.maps.Map(googlemap.current as any, {
 				center: { lat: -34.397, lng: 150.644 },
-				zoom: 8
+				zoom: 8,
+				fullscreenControl: false, // remove the top-right button
+        streetViewControl: false, // remove the pegman
 			})
 
 			if (location && placesService) {
@@ -68,23 +70,11 @@ function Map({ location, reset, setDrawing, setDisableSave }: { location: string
 				}
 				const result = await getPlacesDetails(location)
 
-				map = new google.maps.Map(googlemap.current as any, {
-					center: { ...result },
-					zoom: 20,
-          fullscreenControl: false, // remove the top-right button
-          streetViewControl: false, // remove the pegman
-          zoomControl: false, // remove the bottom-right buttons
-				})
-
 				new google.maps.Marker({
 					position: { ...result },
 					map
 				})
 			} else if(userPosition) {
-				map = new google.maps.Map(googlemap.current as any, {
-					center: { ...userPosition },
-					zoom: 20
-				})
 
 				new google.maps.Marker({
 					position: { ...userPosition },
