@@ -4,7 +4,7 @@ import { GOOGLE_MAPS_KEY } from '../utils/config'
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService'
 import { message } from 'antd'
 
-function Map({ location, reset, setDrawing, setDisableSave }: { location: string | undefined, reset: boolean, setDrawing: React.Dispatch<React.SetStateAction<any>>, setDisableSave: React.Dispatch<React.SetStateAction<boolean>> }) {
+function Map({ location, reset, setDrawing, setDisableSave }: { location: any | undefined, reset: boolean, setDrawing: React.Dispatch<React.SetStateAction<any>>, setDisableSave: React.Dispatch<React.SetStateAction<boolean>> }) {
 	const googlemap = useRef(null)
 	const [userPosition, setUserPosition] = useState<{ lat: number; lng: number }>()
 
@@ -68,7 +68,8 @@ function Map({ location, reset, setDrawing, setDisableSave }: { location: string
 						})
 					})
 				}
-				const result = await getPlacesDetails(location)
+				console.log(location)
+				const result = location
 
 				new google.maps.Marker({
 					position: { ...result },

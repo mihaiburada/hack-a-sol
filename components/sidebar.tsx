@@ -1,4 +1,4 @@
-import { Input, Avatar, Radio, Button, Space, Upload, message } from 'antd'
+import { AutoComplete, Avatar, Radio, Button, Space, Upload, message } from 'antd'
 import { useState, useMemo, useEffect } from 'react'
 import type { UploadProps } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
@@ -7,25 +7,51 @@ import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { GOOGLE_MAPS_KEY } from '../utils/config'
 import { useSession, signOut } from 'next-auth/react'
 import router from 'next/router'
+import axios from 'axios'
 
 const { Dragger } = Upload
+const { Option } = AutoComplete
 
 const Sidebar = ({ onLocationChange }: { onLocationChange: any }) => {
     const [value, setValue] = useState<any>()
     const [type, setType] = useState('maps')
+    const [address, setAddress] = useState('')
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: GOOGLE_MAPS_KEY,
         version: 'weekly',
         libraries: ['drawing', 'places']
     })
 
+    const [options, setOptions] = useState<any>([]);
+
+    const onSearch = async (searchText: string) => {
+        const results = await axios.get(`https://autocomplete.search.hereapi.com/v1/geocode?q=${searchText.replace(' ', '+')}&apiKey=WL3CsXyzuF5dogRx2f_cL_OQxyucuQwRuDR0EDPMOEI`)
+
+        const mappedResults = results.data.items.map((it: any) => ({
+            label: it.title,
+            value: `${it.position.lat}, ${it.position.lng}`
+        }))
+        console.log(mappedResults)
+        setOptions(mappedResults)
+    };
+
+    const onSelect = (data: string) => {
+        setValue({value: data})
+        const addressText = options.filter((op: any) => op.value === data)[0].label
+        setAddress(addressText)
+    };
+
+    // const onChange = (data: string) => {
+    //     setValue(data);
+    // };
+
     const { data: session } = useSession();
 
     useEffect(() => {
         if (!session) {
-          router.push("/");
+            router.push("/");
         }
-      }, [session]);
+    }, [session]);
 
     const props: UploadProps = {
         name: 'file',
@@ -48,8 +74,11 @@ const Sidebar = ({ onLocationChange }: { onLocationChange: any }) => {
     }
 
     useEffect(() => {
-        if (!value || !value.value || !value.value.place_id) return
-        onLocationChange(value.value.place_id)
+        if (!value || !value.value || !value.value) return
+        onLocationChange({
+            lat: Number(value.value.split(',')[0]),
+            lng: Number(value.value.split(',')[1])
+        })
     }, [value])
 
     const renderUploadPDF = useMemo(() => {
@@ -87,15 +116,28 @@ const Sidebar = ({ onLocationChange }: { onLocationChange: any }) => {
                 </div>
                 <div style={{ width: '100%' }}>
                     <div style={{ paddingBottom: 6, fontWeight: 200 }}>
-                        <span>Address</span>
+                        <span>Address {address ? `- ${address}` : ''}</span>
                     </div>
                     {isLoaded && (
-                        <GooglePlacesAutocomplete
-                            selectProps={{
-                                value,
-                                onChange: setValue
-                            }}
-                        />
+                        // <GooglePlacesAutocomplete
+                        //     selectProps={{
+                        //         value,
+                        //         onChange: setValue
+                        //     }}
+                        // />
+                        <AutoComplete
+                            showSearch={true}
+                            style={{ width: 300 }}
+                            onSearch={onSearch}
+                            onSelect={onSelect}
+                            placeholder="Type your location ..."
+                        >
+                            {options.map((op: any) => {
+                                return (
+                                    <Option value={op.value} label={op.label}>{op.label}</Option>
+                                )
+                            })}
+                        </AutoComplete>
                     )}
                 </div>
                 <div style={{ width: '100%', paddingTop: 28 }}>
@@ -104,7 +146,7 @@ const Sidebar = ({ onLocationChange }: { onLocationChange: any }) => {
                     </div>
                     <Radio.Group onChange={e => setType(e.target.value)} value={type}>
                         <Space direction="vertical">
-                            <Radio value={'maps'}>Google Maps</Radio>
+                            <Radio value={'maps'}><strong>Here </strong>Search</Radio>
                             <Radio value={'pdfs'}>Upload PDF</Radio>
                         </Space>
                     </Radio.Group>

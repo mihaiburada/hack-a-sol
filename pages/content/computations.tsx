@@ -12,7 +12,7 @@ import { calculateOptimumTilt } from '../../services/calculatePanelsInArea'
 const { Header, Content, Sider } = Layout
 
 const MapPage: NextPage = () => {
-	const [location, setLocation] = useState<string>()
+	const [location, setLocation] = useState<any>()
 	const [drawing, setDrawing] = useState<any>()
 	const [reset, setReset] = useState<boolean>(false)
 	const [drawnMap, setDrawnMap] = useState<any>(undefined)
@@ -90,7 +90,7 @@ const MapPage: NextPage = () => {
             boxShadow: '0px 3px 26px -7px rgba(0, 70, 143, 0.5)'
           }}
         >
-          <Sidebar onLocationChange={(location: string) => setLocation(location)} />
+          <Sidebar onLocationChange={(location: any) => setLocation(location)} />
         </Sider>
         <Layout style={{backgroundColor: 'white'}}>
           <Content
