@@ -117,6 +117,7 @@ const Statistics = () => {
     const [euroPrice, setEuroPrice] = useState(5)
     const [averageSunDay, setAverageSunDay] = useState(3)
     const [rooftopType, setRooftopType] = useState('plain')
+    const [kwhPrice, setKwhPrice] = useState(157)
 
     useEffect(() => {
         setAvailableInvertors(INVERTORS.invertors)
@@ -133,12 +134,12 @@ const Statistics = () => {
         if (area > 0) {
             computePanelsData()
         }
-    }, [area, anualCons, reserverdSpace, activeTab, availableInvertors, averageSunDay, euroPrice])
+    }, [area, anualCons, reserverdSpace, activeTab, availableInvertors, averageSunDay, euroPrice, kwhPrice])
 
     const computePanelsData = () => {
         const panelWidth = 1650 / 1000
         const panelHeight = 992 / 1000
-        const kwhPriceEur = 157 / 1000
+        const kwhPriceEur = kwhPrice / 1000
         const panelProduce = 280
 
         const panelMSquares = (panelWidth * panelHeight)
@@ -370,7 +371,7 @@ const Statistics = () => {
                             <div style={{ paddingBottom: 6, fontWeight: 200 }}>
                                 <span>Rooftop Type</span>
                             </div>
-                            <Select value={rooftopType} style={{minWidth: 270}} onChange={(value) => {setRooftopType(value)}}>
+                            <Select value={rooftopType} style={{ minWidth: 270 }} onChange={(value) => { setRooftopType(value) }}>
                                 <Option value="plain">Plain</Option>
                                 <Option value="single">Single Slope</Option>
                                 <Option value="complex">
@@ -396,6 +397,12 @@ const Statistics = () => {
                                         <Input type="number" value={averageSunDay} onChange={e => setAverageSunDay(Number(e.target.value))} style={{ minWidth: 270 }} placeholder="Type average sun day ..." />
                                     </div>
                                     <div style={{ flex: 1, flexDirection: 'column', display: 'flex' }}>
+                                        <div style={{ paddingBottom: 6, fontWeight: 200 }}>
+                                            <span>kW Price</span>
+                                        </div>
+                                        <Input type="number" min={1} value={kwhPrice} onChange={e => setKwhPrice(Number(e.target.value))} style={{ minWidth: 270 }} placeholder="Type kW Price ..." />
+                                    </div>
+                                    <div style={{ flex: 1, flexDirection: 'column', display: 'flex', marginLeft: 12 }}>
                                         <div style={{ paddingBottom: 6, fontWeight: 200 }}>
                                             <span>Euro Exchange Rate</span>
                                         </div>
