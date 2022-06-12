@@ -70,11 +70,24 @@ function Map({ location, reset, setDrawing, setDisableSave }: { location: string
 				}
 				const result = await getPlacesDetails(location)
 
+				map = new google.maps.Map(googlemap.current as any, {
+					center: { ...result },
+					zoom: 20,
+          fullscreenControl: false, // remove the top-right button
+          streetViewControl: false, // remove the pegman
+				})
+
 				new google.maps.Marker({
 					position: { ...result },
 					map
 				})
 			} else if(userPosition) {
+				map = new google.maps.Map(googlemap.current as any, {
+					center: { ...userPosition },
+					zoom: 20,
+					fullscreenControl: false, // remove the top-right button
+					streetViewControl: false, // remove the pegman
+				})
 
 				new google.maps.Marker({
 					position: { ...userPosition },
