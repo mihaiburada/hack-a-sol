@@ -104,7 +104,7 @@ const Sidebar = ({ onLocationChange }: { onLocationChange: any }) => {
                     </div>
                     <Radio.Group onChange={e => setType(e.target.value)} value={type}>
                         <Space direction="vertical">
-                            <Radio value={'maps'}>Google Maps</Radio>
+                            <Radio value={'maps'}><img id="img-transform" src="/here_logo.svg.png" style={{ objectFit: 'fill' }} height={35} /> search</Radio>
                             <Radio value={'pdfs'}>Upload PDF</Radio>
                         </Space>
                     </Radio.Group>
